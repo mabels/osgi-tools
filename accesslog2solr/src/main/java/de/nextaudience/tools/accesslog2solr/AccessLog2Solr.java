@@ -1,6 +1,7 @@
 package de.nextaudience.tools.accesslog2solr;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.stream.StreamComponent;
 import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
@@ -29,9 +30,9 @@ public final class AccessLog2Solr {
                 public void configure() throws Exception {
                     LOGGER.info("AccessLog2Solr::RouteBuilder::configure");
                     DataFormat bindy = new BindyCsvDataFormat(AccessLogEntry.class);
-                    from("file:///tmp/files?move=.done").
-                    unmarshal(bindy).
-                    bean(ReadAccessLog.class, "read");
+                    from("file:///tmp/files?noop=true").
+//                    unmarshal(bindy).
+                     bean(ReadAccessLog.class, "tailFile");
                 }
 
             });
