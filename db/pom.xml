@@ -3,17 +3,17 @@
 
   <parent>
     <groupId>com.nextaudience.clustor</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>tools</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>tools</artifactId>
+  <artifactId>tools-db</artifactId>
   <packaging>pom</packaging>
 
-  <name>Clustor :: Tools</name>
+  <name>Clustor :: Tools :: db</name>
 
   <modules>
-    <module>accesslog2solr</module>
-    <module>db</module>
+    <module>command</module>
+    <module>datasource-postgresql</module>
   </modules>
   <build>
   </build>
