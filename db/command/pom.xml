@@ -24,17 +24,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.karaf.shell</groupId>
             <artifactId>org.apache.karaf.shell.console</artifactId>
             <version>2.2.5</version>
+      <scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>com.nextaudience.clustor</groupId>
 			<artifactId>logger</artifactId>
+      <scope>provided</scope>
 		</dependency>
 
         <dependency>
