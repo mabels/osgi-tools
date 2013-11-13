@@ -11,6 +11,7 @@
   <groupId>net.lr.tutorial.karaf.db</groupId>
   <artifactId>db-command</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <name>Clustor :: Tools :: db :: command</name>
   <packaging>bundle</packaging>
   <parent>
     <groupId>com.nextaudience.clustor</groupId>

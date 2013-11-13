@@ -19,22 +19,21 @@ public class Activator implements BundleActivator {
    
     @Override
     public void start(BundleContext context) throws Exception {
-        LOGGER.info("starting factory...");
+        LOGGER.info("starting factory... de.nextaudience.db.datasource.postgresql");
         Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(Constants.SERVICE_PID, "de.nextaudience.db.datasource.postgresql");
         
         myReg = context.registerService(ManagedServiceFactory.class, 
                     new DataSourceFactory(context), 
                     properties);
-        LOGGER.info("registered as ManagedServiceFactory");
+        LOGGER.debug("registered as ManagedServiceFactory");
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        LOGGER.info("stop factory... de.nextaudience.db.datasource.postgresql");
         if (myReg != null) {
             myReg.unregister();
-        } else {
-            LOGGER.info("my service registration as already null " + "(although it shouldn't)!");
         }
     }
 }

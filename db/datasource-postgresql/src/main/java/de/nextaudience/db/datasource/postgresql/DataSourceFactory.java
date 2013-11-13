@@ -37,7 +37,7 @@ public class DataSourceFactory implements ManagedServiceFactory {
     @Override
     public void updated(String pid, Dictionary properties)
             throws ConfigurationException {
-        LOGGER.info("retrieved update for pid " + pid);
+        LOGGER.debug("retrieved update for pid " + pid);
         DataSourceAndServiceRegistration reg = services.get(pid);
         if (reg != null) { // update
             LOGGER.info("GOTUPDATE:"+reg.applicationName);

@@ -17,7 +17,7 @@ public class DataSourceAndServiceRegistration {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceAndServiceRegistration.class);
     
-    final public BasicDataSource dataSource = new BasicDataSource();
+    final public BasicDataSource dataSource = new OsgiBasicDataSource(new org.postgresql.Driver());
     final public String applicationName;
     final public ServiceRegistration<DataSource> serviceRegistration;
     
@@ -32,10 +32,7 @@ public class DataSourceAndServiceRegistration {
 
 
     public DataSourceAndServiceRegistration(Dictionary<?, ?> connectionProp, BundleContext ctx) {
-        LOGGER.info("+DataSourceAndServiceRegistration:"+getString("url", connectionProp));
-        dataSource.setDriverClassLoader(org.postgresql.ds.PGSimpleDataSource.class.getClassLoader());
-        dataSource.setDriverClassName("org.postgresql.ds.PGSimpleDataSource");  
-      
+        LOGGER.debug("+DataSourceAndServiceRegistration:"+getString("url", connectionProp));
         applicationName = getApplicationName(ctx, connectionProp);    
         dataSource.setUsername(getString("user", connectionProp));
         dataSource.setPassword(getString("password", connectionProp));

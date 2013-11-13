@@ -9,6 +9,9 @@
   <artifactId>tools-db-datasource-postgresql</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
+
+  <name>Clustor :: Tools :: db :: datasource-postgresql</name>
+
   <dependencies>
     <!--
 		<dependency>
