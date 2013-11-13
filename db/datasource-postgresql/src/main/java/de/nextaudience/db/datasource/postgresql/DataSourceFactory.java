@@ -46,6 +46,7 @@ public class DataSourceFactory implements ManagedServiceFactory {
         }
         if (reg == null) {
             properties.put("pid", pid);
+            
             final DataSourceAndServiceRegistration dasr = new DataSourceAndServiceRegistration(properties, ctx);
             
             services.put(pid, dasr);

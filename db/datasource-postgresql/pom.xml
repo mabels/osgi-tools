@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-
-	<parent>
-		<groupId>com.nextaudience.clustor</groupId>
-		<artifactId>tools-db</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-
-	<artifactId>tools-db-datasource-postgresql</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>bundle</packaging>
-
-
-
-	<dependencies>
-
-<!--
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.nextaudience.clustor</groupId>
+    <artifactId>tools-db</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>tools-db-datasource-postgresql</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <dependencies>
+    <!--
 		<dependency>
 			<groupId>org.apache.karaf.shell</groupId>
 			<artifactId>org.apache.karaf.shell.console</artifactId>
@@ -32,84 +24,73 @@
       <scope>provided</scope>
 </dependency>
 -->
-		<dependency>
-			<groupId>com.nextaudience.clustor</groupId>
-			<artifactId>logger</artifactId>
+    <dependency>
+      <groupId>com.nextaudience.clustor</groupId>
+      <artifactId>logger</artifactId>
       <scope>provided</scope>
-		</dependency>
-
-<dependency>
-    <groupId>javax.enterprise</groupId>
-    <artifactId>cdi-api</artifactId>
-    <version>1.1-20130918</version>
-    <scope>provided</scope>
-</dependency>
-
-<dependency>
-    <groupId>javax.transaction</groupId>
-        <artifactId>javax.transaction-api</artifactId>
-            <version>1.2</version>
-    <scope>provided</scope>
-            </dependency>
-
-<dependency>
-    <groupId>javax.inject</groupId>
-        <artifactId>javax.inject</artifactId>
-            <version>1</version>
-    <scope>provided</scope>
-            </dependency>
-
-
-<dependency>
-    <groupId>javax.el</groupId>
-        <artifactId>el-api</artifactId>
-            <version>2.2.1-b04</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <version>1.1-20130918</version>
       <scope>provided</scope>
-            </dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>9.2-1002-jdbc4</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>javax.transaction-api</artifactId>
+      <version>1.2</version>
       <scope>provided</scope>
-		</dependency>
-
-<dependency>
-    <groupId>org.apache.commons</groupId>
-        <artifactId>com.springsource.org.apache.commons.dbcp</artifactId>
-            </dependency>
-
-<dependency>
-    <groupId>javax.interceptor</groupId>
-        <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
       <scope>provided</scope>
-            </dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
-		        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.ipojo.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-	</dependencies>
-
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                          <Embed-Dependency>
+    </dependency>
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>el-api</artifactId>
+      <version>2.2.1-b04</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.2-1002-jdbc4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.servicemix.bundles</groupId>
+      <artifactId>org.apache.servicemix.bundles.commons-dbcp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.interceptor</groupId>
+      <artifactId>javax.interceptor-api</artifactId>
+      <version>1.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.ipojo.annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Embed-Dependency>
                                                       postgresql;scope=provided,
                                                       el-api;scope=provided,
                                                       javax.interceptor-api;scope=provided,
@@ -117,11 +98,11 @@
                                                       javax.transaction-api;scope=provided,
                                                       cdi-api;scope=provided
                           </Embed-Dependency>
-                       <Bundle-Activator>de.nextaudience.db.datasource.postgresql.Activator</Bundle-Activator>
-				</instructions>
-				</configuration>
-			</plugin>
-<!-- 
+            <Bundle-Activator>de.nextaudience.db.datasource.postgresql.Activator</Bundle-Activator>
+          </instructions>
+        </configuration>
+      </plugin>
+      <!-- 
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-ipojo-plugin</artifactId>
@@ -148,7 +129,6 @@
 				</executions>
 			</plugin>
 -->
-		</plugins>
-	</build>
+    </plugins>
+  </build>
 </project>
-

@@ -32,7 +32,10 @@ public class DataSourceAndServiceRegistration {
 
 
     public DataSourceAndServiceRegistration(Dictionary<?, ?> connectionProp, BundleContext ctx) {
-        dataSource.setDriverClassName("org.postgresql.ds.PGSimpleDataSource");           
+        LOGGER.info("+DataSourceAndServiceRegistration:"+getString("url", connectionProp));
+        dataSource.setDriverClassLoader(org.postgresql.ds.PGSimpleDataSource.class.getClassLoader());
+        dataSource.setDriverClassName("org.postgresql.ds.PGSimpleDataSource");  
+      
         applicationName = getApplicationName(ctx, connectionProp);    
         dataSource.setUsername(getString("user", connectionProp));
         dataSource.setPassword(getString("password", connectionProp));
@@ -44,6 +47,7 @@ public class DataSourceAndServiceRegistration {
         serviceRegistration = ctx.registerService(DataSource.class, dataSource, regProperties);
     }
     public void unregister() {
+        LOGGER.info("-DataSourceAndServiceRegistration:"+dataSource.getUrl());
         try {
             dataSource.close();
         } catch (SQLException e) {
