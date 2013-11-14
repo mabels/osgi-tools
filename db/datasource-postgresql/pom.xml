@@ -13,20 +13,6 @@
   <name>Clustor :: Tools :: db :: datasource-postgresql</name>
 
   <dependencies>
-    <!--
-		<dependency>
-			<groupId>org.apache.karaf.shell</groupId>
-			<artifactId>org.apache.karaf.shell.console</artifactId>
-			<version>2.2.5</version>
-      <scope>provided</scope>
-		</dependency>
-<dependency>
-    <groupId>org.apache.felix</groupId>
-    <artifactId>org.apache.felix.scr.annotations</artifactId>
-    <version>1.9.6</version>
-      <scope>provided</scope>
-</dependency>
--->
     <dependency>
       <groupId>com.nextaudience.clustor</groupId>
       <artifactId>logger</artifactId>
@@ -65,6 +51,7 @@
     <dependency>
       <groupId>org.apache.servicemix.bundles</groupId>
       <artifactId>org.apache.servicemix.bundles.commons-dbcp</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.interceptor</groupId>
@@ -105,33 +92,6 @@
           </instructions>
         </configuration>
       </plugin>
-      <!-- 
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-ipojo-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>ipojo-bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
- 
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-scr-plugin</artifactId>
-				<version>1.15.0</version>
-				<executions>
-					<execution>
-						<id>generate-scr-scrdescriptor</id>
-						<goals>
-							<goal>scr</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
--->
     </plugins>
   </build>
 </project>
