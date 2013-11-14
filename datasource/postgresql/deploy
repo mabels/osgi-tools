@@ -1,0 +1,5 @@
+
+osgi:install -s mvn:com.nextaudience.clustor/tools-datasource-base/0.0.1-SNAPSHOT
+osgi:install -s mvn:com.nextaudience.clustor/tools-datasource-postgresql/0.0.1-SNAPSHOT
+
+dev:watch *

@@ -1,0 +1,14 @@
+features:addurl http://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.ipojo.features/1.11.0/org.apache.felix.ipojo.features-1.11.0.xml
+
+features:install ipojo
+features:install ipojo-command
+features:install ipojo-all
+
+osgi:install -s mvn:org.apache.commons/com.springsource.org.apache.commons.pool/1.5.3
+osgi:install -s mvn:javax.transaction/com.springsource.javax.transaction/1.1.0
+osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3
+osgi:install -s mvn:javax.servlet/com.springsource.javax.servlet/2.5.0
+
+osgi:install -s mvn:com.nextaudience.clustor/tools-datasource-base/0.0.1-SNAPSHOT
+
+dev:watch *
