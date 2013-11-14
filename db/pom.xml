@@ -13,7 +13,7 @@
     <module>command</module>
     <module>datasource-test</module>
     <module>datasource-postgresql</module>
-    <module>datasource-h2</module>
+    <!--<module>datasource-h2</module>-->
   </modules>
   <build>
   </build>
