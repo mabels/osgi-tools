@@ -11,7 +11,7 @@
   <name>Clustor :: Tools</name>
   <modules>
     <module>accesslog2solr</module>
-    <module>db</module>
+    <module>datasource</module>
   </modules>
   <build>
   </build>
