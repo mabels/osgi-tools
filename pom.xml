@@ -12,6 +12,7 @@
   <modules>
     <module>accesslog2solr</module>
     <module>datasource</module>
+    <module>sreg</module>
   </modules>
   <build>
   </build>

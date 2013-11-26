@@ -30,23 +30,23 @@ public class QueryCommand implements Action {
     @Argument(index=0, name="clazz", required=true, description="Interface Name", multiValued=false)
     String clazz;
 
-    @Argument(index=1, name="el", required=true, description="EL Query", multiValued=false)
+    @Argument(index=1, name="el", required=false, description="EL Query", multiValued=false)
     String el;
 
     private ServiceRegistry serviceRegistry;
     private BundleContext context;
-    
+
     public void setServiceRegistry(ServiceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
-        
-    }
-    
-    public void setContext(BundleContext context) {
-        this.context = context;
-        
+
     }
 
-  
+    public void setContext(BundleContext context) {
+        this.context = context;
+
+    }
+
+
     @Override
     public Object execute(CommandSession session) throws Exception {
         System.out.println("Query:"+clazz+":"+el+"=>"+context+"=>"+serviceRegistry);
@@ -57,6 +57,9 @@ public class QueryCommand implements Action {
         }
         for(ServiceReference sr : serviceReferences) {
             System.out.println("Found:"+context.getService(sr).getClass().getCanonicalName());
+            for (String pKey : sr.getPropertyKeys()) {
+                System.out.println("Key:"+pKey + "=" + sr.getProperty(pKey));
+            }
         }
         return null;
     }
