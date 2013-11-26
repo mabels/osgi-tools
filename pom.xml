@@ -6,8 +6,8 @@
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>tools</artifactId>
   <packaging>pom</packaging>
+  <artifactId>tools</artifactId>
   <name>Clustor :: Tools</name>
   <modules>
     <module>accesslog2solr</module>

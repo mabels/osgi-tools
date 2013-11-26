@@ -8,14 +8,13 @@
     the License. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.lr.tutorial.karaf.db</groupId>
-  <artifactId>tools-datasource-command</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Clustor :: Tools :: datasource :: command</name>
+  <groupId>com.adviser</groupId>
+  <artifactId>osgi.karaf.cmds.sreg</artifactId>
+  <name>Clustor :: Tools :: sreg</name>
   <packaging>bundle</packaging>
   <parent>
     <groupId>com.nextaudience.clustor</groupId>
-    <artifactId>tools-datasource</artifactId>
+    <artifactId>tools</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <dependencies>
@@ -42,7 +41,6 @@
         <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.6</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>
