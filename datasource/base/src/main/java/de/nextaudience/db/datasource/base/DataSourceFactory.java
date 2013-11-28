@@ -17,23 +17,30 @@ import org.slf4j.LoggerFactory;
 
 //@Component(immediate=true,name="de.nextaudience.db.datasource.postgresql",factory="datasource.postgresql")
 ////public class DataSourceFactory implements ManagedServiceFactory {
-  
+
 public class DataSourceFactory implements ManagedServiceFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceFactory.class);
-    
+
     private final Map<String, DataSourceAndServiceRegistration> services = new HashMap<String, DataSourceAndServiceRegistration>();
     private final BundleContext ctx;
     private final Driver driver;
+    private final String dialect;
 
-    public DataSourceFactory(BundleContext ctx, Driver driver) {
+    public DataSourceFactory(BundleContext ctx, Driver driver, String dialect) {
         this.ctx = ctx;
         this.driver = driver;
+        this.dialect = dialect;
     }
-    
+
+
+    public String getDialect() {
+        return dialect;
+    }
+
     public Driver getDriver() {
         return driver;
     }
-    
+
     public String getName() {
         return getDriver().getClass().getCanonicalName();
     }
@@ -48,15 +55,15 @@ public class DataSourceFactory implements ManagedServiceFactory {
             reg = null;
         }
         if (reg == null) {
-            properties.put("pid", pid);            
-            final DataSourceAndServiceRegistration dasr = new DataSourceAndServiceRegistration(getDriver(), properties, ctx);        
+            properties.put("pid", pid);
+            final DataSourceAndServiceRegistration dasr = new DataSourceAndServiceRegistration(getDriver(), getDialect(), properties, ctx);
             services.put(pid, dasr);
             LOGGER.info("UPDATED:new:"+dasr.applicationName);
         }
     }
 
     @Override
-    public void deleted(String pid) {        
+    public void deleted(String pid) {
         for (DataSourceAndServiceRegistration reg : services.values()) {
             LOGGER.info("deregister " + reg);
             reg.unregister();

@@ -14,33 +14,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataSourceAndServiceRegistration {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceAndServiceRegistration.class);
-    
+
     final public BasicDataSource dataSource;
     final public String applicationName;
     final public ServiceRegistration serviceRegistration;
-    
+
     private static String getString(String key, Dictionary<?, ?> properties) {
         Object value = properties.get(key);
-        return (value == null || !(value instanceof String)) ? "" : (String)value;   
+        return (value == null || !(value instanceof String)) ? "" : (String)value;
     }
-    
+
     private static String getApplicationName(BundleContext ctx, Dictionary<?, ?> properties) {
         return "DS-"+ctx.getBundle().getBundleId()+"-"+getString("pid", properties)+"-"+getString("name", properties);
     }
 
 
-    public DataSourceAndServiceRegistration(Driver driver, Dictionary<?, ?> connectionProp, BundleContext ctx) {
+    public DataSourceAndServiceRegistration(Driver driver, String dialect, Dictionary<?, ?> connectionProp, BundleContext ctx) {
         LOGGER.debug("+DataSourceAndServiceRegistration:"+getString("url", connectionProp));
         dataSource = new OsgiBasicDataSource(driver);
-        applicationName = getApplicationName(ctx, connectionProp);    
+        applicationName = getApplicationName(ctx, connectionProp);
         dataSource.setUsername(getString("user", connectionProp));
         dataSource.setPassword(getString("password", connectionProp));
         dataSource.setUrl(getString("url", connectionProp));
-        
+
         final Dictionary<String, String> regProperties = new Hashtable<String, String>();
-        regProperties.put("osgi.jndi.service.name" , DataSourceAndServiceRegistration.getString("name", connectionProp)); 
+        regProperties.put("osgi.jndi.service.name" , DataSourceAndServiceRegistration.getString("name", connectionProp));
+        regProperties.put("hibernate.dialect", dialect);
 
         serviceRegistration = ctx.registerService(DataSource.class.getCanonicalName(), dataSource, regProperties);
     }

@@ -8,6 +8,6 @@ public class Activator extends de.nextaudience.db.datasource.base.Activator {
 
     @Override
     protected DataSourceFactory makeDataSourceFactory(BundleContext context) {
-        return new DataSourceFactory(context, new org.postgresql.Driver());
+        return new DataSourceFactory(context, new org.postgresql.Driver(), "org.hibernate.dialect.PostgreSQLDialect");
     }
 }
