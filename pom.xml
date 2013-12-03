@@ -13,6 +13,7 @@
     <module>accesslog2solr</module>
     <module>datasource</module>
     <module>sreg</module>
+    <module>helper</module>
   </modules>
   <build>
   </build>
