@@ -15,8 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.nextaudience.clustor</groupId>
-			<artifactId>logger</artifactId>
-			<scope>provided</scope>
+			<artifactId>logger</artifactId>			
 		</dependency>
 		<dependency>
 			<groupId>com.nextaudience.clustor</groupId>
@@ -24,8 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.ipojo.annotations</artifactId>
-			<scope>provided</scope>
+			<artifactId>org.apache.felix.ipojo.annotations</artifactId>			
 		</dependency>
 
 	</dependencies>
