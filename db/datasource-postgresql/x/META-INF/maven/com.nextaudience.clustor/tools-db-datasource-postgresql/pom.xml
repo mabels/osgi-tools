@@ -96,12 +96,12 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                           <Embed-Dependency>
-                                                      postgresql;scope=provided,
-                                                      el-api;scope=provided,
-                                                      javax.interceptor-api;scope=provided,
-                                                      javax.inject;scope=provided,
-                                                      javax.transaction-api;scope=provided,
-                                                      cdi-api;scope=provided
+                                                      postgresql;scope=compile,
+                                                      el-api;scope=compile,
+                                                      javax.interceptor-api;scope=compile,
+                                                      javax.inject;scope=compile,
+                                                      javax.transaction-api;scope=compile,
+                                                      cdi-api;scope=compile
                           </Embed-Dependency>
                        <Bundle-Activator>de.nextaudience.db.datasource.postgresql</Bundle-Activator>
 				</instructions>

@@ -60,9 +60,9 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Embed-Dependency>
-							h2;scope=provided,
-							jts;scope=provided,
-							lucene-core;scope=provided
+							h2;scope=compile,
+							jts;scope=compile,
+							lucene-core;scope=compile
 						</Embed-Dependency>
 						<Bundle-Activator>de.nextaudience.db.datasource.h2.Activator</Bundle-Activator>
 					</instructions>
