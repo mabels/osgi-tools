@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,8 @@ public class DataSourceAndServiceRegistration {
 
 
     public DataSourceAndServiceRegistration(Driver driver, String dialect, Dictionary<?, ?> connectionProp, BundleContext ctx) {
-        LOGGER.debug("+DataSourceAndServiceRegistration:"+getString("url", connectionProp));
+        LOGGER.debug("+DataSourceAndServiceRegistration:" + getString("name", connectionProp) + ", URL: "
+                + getString("url", connectionProp));
         dataSource = new OsgiBasicDataSource(driver);
         applicationName = getApplicationName(ctx, connectionProp);
         dataSource.setUsername(getString("user", connectionProp));
@@ -42,6 +44,8 @@ public class DataSourceAndServiceRegistration {
         final Dictionary<String, String> regProperties = new Hashtable<String, String>();
         regProperties.put("osgi.jndi.service.name" , DataSourceAndServiceRegistration.getString("name", connectionProp));
         regProperties.put("hibernate.dialect", dialect);
+        regProperties.put(Constants.SERVICE_PID, getString(Constants.SERVICE_PID, connectionProp));
+        regProperties.put("instance.name", getString("instance.name", connectionProp));
 
         serviceRegistration = ctx.registerService(DataSource.class.getCanonicalName(), dataSource, regProperties);
     }

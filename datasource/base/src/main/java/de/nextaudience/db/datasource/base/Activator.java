@@ -25,6 +25,8 @@ public abstract class Activator implements BundleActivator {
         LOGGER.info("starting factory..." + dataSourceFactory.getName());
         final Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(Constants.SERVICE_PID, dataSourceFactory.getName());
+        properties.put("database.type", dataSourceFactory.getName());
+        properties.put("database.dialect", dataSourceFactory.getDialect());
         myReg = context.registerService(ManagedServiceFactory.class.getCanonicalName(), dataSourceFactory, properties);
         LOGGER.debug("registered as ManagedServiceFactory" + dataSourceFactory.getName());
     }

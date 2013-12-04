@@ -66,7 +66,7 @@ public class IPOJOHelper {
                                                             String factoryName, String instanceName) {
 
         // Create the instance configuration
-        Dictionary<String, String> configuration = new Hashtable<String, String>();
+        Dictionary<String, Object> configuration = new Hashtable<String, Object>();
         configuration.put("instance.name", instanceName);
 
         return createComponentInstance(bundle, factoryName, configuration);
@@ -84,7 +84,7 @@ public class IPOJOHelper {
      * @return the newly created component instance.
      */
     public static ComponentInstance createComponentInstance(Bundle bundle,
-                                                            String factoryName, Dictionary<String, String> configuration) {
+                                                            String factoryName, Dictionary<String, Object> configuration) {
 
         // Retrieve the component factory.
         Factory fact = getFactory(bundle, factoryName);
@@ -152,7 +152,7 @@ public class IPOJOHelper {
      * @return the newly created component instance.
      */
     public static ComponentInstance createComponentInstance(Bundle bundle,
-                                                            String factoryName, String instanceName, Dictionary<String, String> configuration) {
+                                                            String factoryName, String instanceName, Dictionary<String, Object> configuration) {
 
         // Add the instance name to the configuration
         configuration.put("instance.name", instanceName);
@@ -196,7 +196,7 @@ public class IPOJOHelper {
             String instanceName) {
 
         // Create the instance configuration
-        Dictionary<String, String> configuration = new Hashtable<String, String>();
+        Dictionary<String, Object> configuration = new Hashtable<String, Object>();
         configuration.put("instance.name", instanceName);
 
         return createComponentInstance(serviceContext, factoryName,
@@ -216,7 +216,7 @@ public class IPOJOHelper {
      */
     public static ComponentInstance createComponentInstance(
             ServiceContext serviceContext, String factoryName,
-            Dictionary<String, String> configuration) {
+            Dictionary<String, Object> configuration) {
 
         // Retrieve the component factory.
         Factory fact = getFactory(serviceContext, factoryName);
@@ -251,7 +251,7 @@ public class IPOJOHelper {
      */
     public static ComponentInstance createComponentInstance(
             ServiceContext serviceContext, String factoryName,
-            String instanceName, Dictionary<String, String> configuration) {
+            String instanceName, Dictionary<String, Object> configuration) {
 
         // Add the instance name to the configuration
         configuration.put("instance.name", instanceName);
@@ -732,7 +732,7 @@ public class IPOJOHelper {
      * @return the newly created component instance.
      */
     public ComponentInstance createComponentInstance(String factoryName,
-                                                     Dictionary<String, String> configuration) {
+                                                     Dictionary<String, Object> configuration) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, configuration);
         m_instances.add(ci);
@@ -767,7 +767,7 @@ public class IPOJOHelper {
      */
     public ComponentInstance createComponentInstance(String factoryName) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
-                factoryName, (Dictionary<String, String>) null);
+                factoryName, (Dictionary<String, Object>) null);
         m_instances.add(ci);
         return ci;
     }
@@ -783,7 +783,7 @@ public class IPOJOHelper {
      * @return the newly created component instance.
      */
     public ComponentInstance createComponentInstance(String factoryName,
-                                                     String instanceName, Dictionary<String, String> configuration) {
+                                                     String instanceName, Dictionary<String, Object> configuration) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, instanceName, configuration);
         m_instances.add(ci);

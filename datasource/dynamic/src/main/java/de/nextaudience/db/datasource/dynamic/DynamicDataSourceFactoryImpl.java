@@ -41,7 +41,9 @@ public class DynamicDataSourceFactoryImpl implements DynamicDataSourceFactory {
 
     }
 
-    public void createDataSource(final String pid, final String name, final String url, final String user, final String password) throws Exception {
+    public void createDataSource(final String pid, final String name, final String url, final String user, final String password)
+            throws Exception {
+        LOG.info("Creating dynamic datasource " + pid);
         final String dbType = getDatabaseType(url);
         if (dbType != null) {
             final Dictionary<String, String> properties = new Hashtable<String, String>();
@@ -50,11 +52,20 @@ public class DynamicDataSourceFactoryImpl implements DynamicDataSourceFactory {
             properties.put("user", user);
             properties.put("password", password);
             properties.put("url", url);
+            
+            properties.put("instance.name", name);
             this.factories.get(dbType).updated(pid, properties);
         } else {
             // TODO: throw exception?
         }
+    }
 
+    public void deleteDataSource(String pid, String url) {
+        LOG.info("Deleting dynamic datasource " + pid);
+        final String dbType = getDatabaseType(url);
+        if (dbType != null) {
+            this.factories.get(dbType).deleted(pid);
+        }
     }
 
     private static String getString(final String key, final Dictionary<?, ?> properties) {
@@ -63,7 +74,12 @@ public class DynamicDataSourceFactoryImpl implements DynamicDataSourceFactory {
     }
 
     private String getDatabaseType(final String url) {
-        return "org.postgresql.Driver";
+        if (url.startsWith("jdbc:postgresql:")) {
+            return "org.postgresql.Driver";
+        } else if (url.startsWith("jdbc:h2:")) {
+            return "org.h2.Driver";
+        }
+        return null;
     }
 
 }

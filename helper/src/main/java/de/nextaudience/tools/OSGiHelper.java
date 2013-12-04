@@ -1,6 +1,5 @@
 package de.nextaudience.tools;
 
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +115,7 @@ public class OSGiHelper {
                                                             String itf, String pid) {
         String filter = "(" + "service.pid" + "=" + pid + ")";
         ServiceReference[] refs = getServiceReferences(bundle, itf, filter);
-        if (refs == null) {
+        if (refs == null || refs.length == 0) {
             return null;
         } else if (refs.length == 1) {
             return refs[0];

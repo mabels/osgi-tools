@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ public class DataSourceFactory implements ManagedServiceFactory {
         }
         if (reg == null) {
             properties.put("pid", pid);
+            properties.put(Constants.SERVICE_PID, pid);
             final DataSourceAndServiceRegistration dasr = new DataSourceAndServiceRegistration(getDriver(), getDialect(), properties, ctx);
             services.put(pid, dasr);
             LOGGER.info("UPDATED:new:"+dasr.applicationName);
@@ -64,9 +66,11 @@ public class DataSourceFactory implements ManagedServiceFactory {
 
     @Override
     public void deleted(String pid) {
-        for (DataSourceAndServiceRegistration reg : services.values()) {
-            LOGGER.info("deregister " + reg);
+        DataSourceAndServiceRegistration reg = services.get(pid);
+        if (reg != null) { 
+            LOGGER.info("deleting:"+reg.applicationName);
             reg.unregister();
+            services.remove(pid);
         }
     }
 
