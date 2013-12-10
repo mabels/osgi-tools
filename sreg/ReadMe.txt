@@ -1,3 +1,6 @@
+install -s mvn:com.adviser/osgi.karaf.cmds.sreg/0.0.1-SNAPSHOT
+
+
 Database commands for the Karaf shell
 -------------------------------------
 

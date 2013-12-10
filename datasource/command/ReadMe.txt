@@ -15,7 +15,7 @@ Installation
 
 First see datasources project REDAME and install one or more databases and datasources into karaf 
 
-> install -s mvn:net.lr.tutorial.karaf.db/db-command/1.0-SNAPSHOT
+> install -s mvn:net.lr.tutorial.karaf.db/tools-datasource-command/0.0.1-SNAPSHOT
 
 > db:select <your datasource name>
 > db:exec "create table person (name VARCHAR(100))"
