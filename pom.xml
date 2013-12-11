@@ -14,6 +14,7 @@
     <module>datasource</module>
     <module>sreg</module>
     <module>helper</module>
+    <module>hibernateosgi</module>
   </modules>
   <build>
   </build>
