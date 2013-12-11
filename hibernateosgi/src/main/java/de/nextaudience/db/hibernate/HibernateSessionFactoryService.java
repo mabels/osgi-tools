@@ -23,7 +23,6 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hibernate.metamodel.Metadata;
 import org.hibernate.metamodel.MetadataSources;
 import org.hibernate.metamodel.spi.TypeContributor;
-import org.hibernate.osgi.OsgiClassLoader;
 import org.hibernate.osgi.OsgiJtaPlatform;
 import org.hibernate.osgi.OsgiServiceUtil;
 import org.hibernate.osgi.OsgiSessionFactoryService;
@@ -122,6 +121,10 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
+    public void unregisterBundle(final Bundle requestingBundle) {
+        osgiClassLoader.removeBundle(requestingBundle);        
+    }
+    
     @SuppressWarnings("rawtypes")
     @Override
     public Object getService(final Bundle requestingBundle, final ServiceRegistration registration) {

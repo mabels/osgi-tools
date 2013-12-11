@@ -10,8 +10,8 @@ import org.osgi.framework.Bundle;
 
 public interface HibernateSessionFactoryCreator {
 
-    public SessionFactory create(final Bundle requestingBundle, final String hibernateCfg,
-            final ConnectionProvider connectionProvider, final DialectFactory dialectFactory,
-            final Map<String, NamedSQLQueryDefinition> namedSQLQueries);
+    SessionFactory create(final Bundle requestingBundle, final String hibernateCfg, final ConnectionProvider connectionProvider,
+            final DialectFactory dialectFactory, final Map<String, NamedSQLQueryDefinition> namedSQLQueries);
 
+    void unregisterBundle(final Bundle requestingBundle);
 }
