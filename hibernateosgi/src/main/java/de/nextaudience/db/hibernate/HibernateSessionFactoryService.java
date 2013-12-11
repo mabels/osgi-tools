@@ -1,6 +1,5 @@
 package de.nextaudience.db.hibernate;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -33,7 +32,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.framework.wiring.BundleWiring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,25 +81,13 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
         configuration.getProperties().put(AvailableSettings.JTA_PLATFORM, this.osgiJtaPlatform);
         configuration.configure(hibernateCfg);
 
-//        // Allow bundles to put the config file somewhere other than the root level.
-//        final BundleWiring bundleWiring = requestingBundle.adapt(BundleWiring.class);
-//        final Collection<String> cfgResources = bundleWiring.listResources("/", hibernateCfg, BundleWiring.LISTRESOURCES_RECURSE | 1048576);
-//        if (cfgResources.size() == 0) {
-//            configuration.configure();
-//        } else {
-//            if (cfgResources.size() > 1) {
-//                LOG.warn("Multiple hibernate.cfg.xml files found in the persistence bundle.  Using the first one discovered.");
-//            }
-//            final String cfgResource = "/" + cfgResources.iterator().next();
-//            configuration.configure(cfgResource);
-//        }
-
         final BootstrapServiceRegistryBuilder builder = new BootstrapServiceRegistryBuilder();
         builder.with(this.osgiClassLoader);
         // Are the following 2 really needed?
         builder.with(org.hibernate.cache.ehcache.EhCacheRegionFactory.class.getClassLoader());
         builder.with(net.sf.ehcache.statistics.sampled.SampledCacheStatistics.class.getClassLoader());
         builder.with(javassist.util.proxy.ProxyObject.class.getClassLoader());
+        builder.with(org.hibernate.proxy.HibernateProxy.class.getClassLoader());
 
         final Integrator[] integrators = OsgiServiceUtil.getServiceImpls(Integrator.class, this.context);
         for (final Integrator integrator : integrators) {
@@ -136,11 +122,13 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Object getService(final Bundle requestingBundle, final ServiceRegistration registration) {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void ungetService(final Bundle requestingBundle, final ServiceRegistration registration, final Object service) {
         // do nothing
