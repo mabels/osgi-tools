@@ -46,17 +46,21 @@ public class DynamicDataSourceFactoryImpl implements DynamicDataSourceFactory {
         LOG.info("Creating dynamic datasource " + pid);
         final String dbType = getDatabaseType(url);
         if (dbType != null) {
-            final Dictionary<String, String> properties = new Hashtable<String, String>();
-            properties.put("pid", pid);
-            properties.put("name", name);
-            properties.put("user", user);
-            properties.put("password", password);
-            properties.put("url", url);
-            
-            properties.put("instance.name", name);
-            this.factories.get(dbType).updated(pid, properties);
+            if (this.factories.get(dbType) != null) {
+                final Dictionary<String, String> properties = new Hashtable<String, String>();
+                properties.put("pid", pid);
+                properties.put("name", name);
+                properties.put("user", user);
+                properties.put("password", password);
+                properties.put("url", url);
+                
+                properties.put("instance.name", name);
+                this.factories.get(dbType).updated(pid, properties);                
+            } else {
+                throw new RuntimeException("Datasource factory of type '"+ dbType + "' not found. Maybe not all datasource services started?");
+            }
         } else {
-            // TODO: throw exception?
+            throw new RuntimeException("Unsupported datasource factory type used in URL '"+ url + "'.");
         }
     }
 
