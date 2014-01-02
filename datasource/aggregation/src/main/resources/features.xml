@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.0.0 http://karaf.apache.org/xmlns/features/v1.0.0">
+
+  <repository>mvn:com.nextaudience.clustor/clustor-feature-common/${project.version}/xml</repository>
+
+  <feature name='com.nextaudience.clustor.tools.datasource'
+    version='${project.version}'>
+    <feature version="${project.version}">com.nextaudience.clustor.org.osgi</feature>
+    <feature version="${project.version}">com.nextaudience.clustor.ipojo</feature>
+    <feature version="${project.version}">com.nextaudience.clustor.jdk-classes</feature>
+    <feature version="${project.version}">com.nextaudience.clustor.logger</feature>
+    <!-- <feature version="${project.version}">com.nextaudience.clustor.xerces</feature> -->
+    <bundle>mvn:com.h2database/com.springsource.org.h2/1.0.71</bundle>
+    <bundle>mvn:org.postgresql/com.springsource.org.postgresql.jdbc3/8.3.603</bundle>
+    <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.pool/1.5.3</bundle>
+    <bundle>mvn:javax.transaction/com.springsource.javax.transaction/1.1.0</bundle>
+    <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3</bundle>
+    <bundle>mvn:javax.servlet/com.springsource.javax.servlet/${javax.servlet.version}</bundle>
+    <bundle>mvn:com.nextaudience.clustor/tools-datasource-base/${project.version}</bundle>
+    <bundle>wrap:mvn:xerces/xerces/${xerces.version}</bundle>
+    <bundle>mvn:com.nextaudience.clustor/tools-datasource-h2/${project.version}</bundle>
+    <bundle>mvn:com.nextaudience.clustor/tools-datasource-postgresql/${project.version}</bundle>
+    <bundle>mvn:com.nextaudience.clustor/tools-datasource-dynamic/${project.version}</bundle>
+    <bundle>mvn:com.nextaudience.clustor/tools-helper/${project.version}</bundle>
+  </feature>
+
+
+  <feature name='com.nextaudience.clustor.tools.datasource.aggregation'
+    version='${project.version}'>
+    <feature version="${project.version}">com.nextaudience.clustor.tools.datasource</feature>
+    <bundle>mvn:com.nextaudience.clustor/tools-datasource-aggregation/${project.version}</bundle>
+    <configfile finalname="/etc/de.nextaudience.db.datasource.aggregation.cfg">mvn:com.nextaudience.clustor/tools-datasource-aggregation/${project.version}/cfg</configfile>
+  </feature>
+
+</features>

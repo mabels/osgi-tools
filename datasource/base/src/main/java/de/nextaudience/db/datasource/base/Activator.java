@@ -15,7 +15,7 @@ public abstract class Activator implements BundleActivator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Activator.class);
    
-    protected abstract DataSourceFactory makeDataSourceFactory(BundleContext context);
+    public abstract DataSourceFactory makeDataSourceFactory(BundleContext context);
 
     private ServiceRegistration myReg;
 
