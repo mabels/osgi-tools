@@ -6,7 +6,17 @@ import de.nextaudience.db.datasource.base.DataSourceFactory;
 
 public class Activator extends de.nextaudience.db.datasource.base.Activator {
 
-     @Override
+    private static Activator instance;
+
+     public Activator() {
+        instance = this;
+    }
+
+     public static Activator getInstance() {
+         return instance;
+     }
+
+    @Override
     public DataSourceFactory makeDataSourceFactory(BundleContext context) {
         return new DataSourceFactory(context, new org.h2.Driver(), "org.hibernate.dialect.H2Dialect");
     }

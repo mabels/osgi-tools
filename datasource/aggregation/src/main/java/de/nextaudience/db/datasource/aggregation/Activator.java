@@ -19,6 +19,14 @@ import org.slf4j.LoggerFactory;
 
 import de.nextaudience.db.datasource.base.DataSourceFactory;
 
+/**
+ * Convenience class to gather all db connections into one file that can get deployed as feature.
+ *
+ * Should not be used in parallel to the other activators as there is currently no
+ * detection of duplicate db configurations.
+ *
+ * This class reuses the h2 and postgres activatirs with its own bundle context.
+ */
 @Component(managedservice = "de.nextaudience.db.datasource.aggregation")
 @Instantiate
 public class Activator {
@@ -30,7 +38,6 @@ public class Activator {
     private final BundleContext bundleContext;
 
     private final Map<String, DataSourceFactory> factories = new HashMap<>();
-
 
     public Activator(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
@@ -83,9 +90,9 @@ public class Activator {
         DataSourceFactory dataSourceFactory;
         // this is ugly
         if ("h2".equals(driver)) {
-            dataSourceFactory = new de.nextaudience.db.datasource.h2.Activator().makeDataSourceFactory(this.bundleContext);
+            dataSourceFactory = de.nextaudience.db.datasource.h2.Activator.getInstance().makeDataSourceFactory(this.bundleContext);
         } else {
-            dataSourceFactory = new de.nextaudience.db.datasource.postgresql.Activator().makeDataSourceFactory(this.bundleContext);
+            dataSourceFactory = de.nextaudience.db.datasource.postgresql.Activator.getInstance().makeDataSourceFactory(this.bundleContext);
         }
         return dataSourceFactory;
     }

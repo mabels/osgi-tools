@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 public abstract class Activator implements BundleActivator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Activator.class);
-   
+
     public abstract DataSourceFactory makeDataSourceFactory(BundleContext context);
 
-    private ServiceRegistration myReg;
+    private ServiceRegistration<ManagedServiceFactory> myReg;
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -27,14 +27,14 @@ public abstract class Activator implements BundleActivator {
         properties.put(Constants.SERVICE_PID, dataSourceFactory.getName());
         properties.put("database.type", dataSourceFactory.getName());
         properties.put("database.dialect", dataSourceFactory.getDialect());
-        myReg = context.registerService(ManagedServiceFactory.class.getCanonicalName(), dataSourceFactory, properties);
+        this.myReg = context.registerService(ManagedServiceFactory.class, dataSourceFactory, properties);
         LOGGER.debug("registered as ManagedServiceFactory" + dataSourceFactory.getName());
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
-        if (myReg != null) {
-            myReg.unregister();
+        if (this.myReg != null) {
+            this.myReg.unregister();
         }
     }
 }
