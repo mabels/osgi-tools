@@ -24,6 +24,9 @@
     <bundle>mvn:com.nextaudience.clustor/tools-datasource-postgresql/${project.version}</bundle>
     <bundle>mvn:com.nextaudience.clustor/tools-datasource-dynamic/${project.version}</bundle>
     <bundle>mvn:com.nextaudience.clustor/tools-helper/${project.version}</bundle>
+    <bundle>mvn:net.lr.tutorial.karaf.db/tools-datasource-command/${project.version}</bundle>
+    <bundle>mvn:org.gnu.readline/com.springsource.org.gnu.readline/0.8.0</bundle>
+    <bundle>mvn:com.adviser.karaf.commands/henplus/1.0.1</bundle>
   </feature>
 
 
