@@ -90,6 +90,7 @@ public class DbSelect {
             info.product = dbMeta.getDatabaseProductName();
             info.version = dbMeta.getDatabaseProductVersion();
             info.url = dbMeta.getURL();
+            con.close();
         } catch (Exception e) {
             info.url = "Connect failed " + e.getMessage();
         }

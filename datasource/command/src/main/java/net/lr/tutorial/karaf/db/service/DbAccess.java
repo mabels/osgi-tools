@@ -54,7 +54,9 @@ public class DbAccess {
             if (stmt != null) {
                 stmt.close();
             }
+            con.close();
         }
+        
     }
 
     public ShellTable getTableInfo() throws Exception {
@@ -66,6 +68,7 @@ public class DbAccess {
         ResultSet rs = metaData.getTables(null, null, null, null);
         ShellTable table = printResult(rs);
         rs.close();
+        con.close();
         return table;
     }
 
@@ -87,6 +90,7 @@ public class DbAccess {
             if (stmt != null) {
                 stmt.close();
             }
+            con.close();
         }
     }
 
