@@ -16,8 +16,10 @@
     <module>test</module>
     <module>postgresql</module>
     <module>h2</module>
+    <!--
     <module>dynamic</module>
     <module>aggregation</module>
+    -->
   </modules>
   <build>
   </build>

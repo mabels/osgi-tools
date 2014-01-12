@@ -17,6 +17,11 @@
       <groupId>com.nextaudience.clustor</groupId>
       <artifactId>logger</artifactId>      
     </dependency>
+		<dependency>
+			<groupId>com.nextaudience.clustor</groupId>
+			<artifactId>tools-datasource-interfaces</artifactId>			
+		</dependency>
+
     <dependency>
       <groupId>com.nextaudience.clustor</groupId>
       <artifactId>tools-datasource-base</artifactId>      
@@ -56,6 +61,11 @@
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
+	<plugin>
+		<groupId>org.apache.felix</groupId>
+		<artifactId>maven-ipojo-plugin</artifactId>
+	</plugin>
+
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -71,7 +81,6 @@
                                                       javax.transaction-api;scope=compile,
                                                       cdi-api;scope=compile
                           </Embed-Dependency>
-            <Bundle-Activator>de.nextaudience.db.datasource.postgresql.Activator</Bundle-Activator>
           </instructions>
         </configuration>
       </plugin>

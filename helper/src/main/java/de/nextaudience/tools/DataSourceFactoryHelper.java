@@ -6,6 +6,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import de.nextaudience.db.datasource.dynamic.DynamicDataSourceFactory;
+import java.util.Dictionary;
 
 
 public class DataSourceFactoryHelper {
@@ -30,7 +31,7 @@ public class DataSourceFactoryHelper {
             this.dataSourceFactory = dataSourceFactory;
             this.pid = pid;
             this.url = url;
-            dataSourceFactory.createDataSource(pid, name, url, user, password);
+            dataSourceFactory.createOrUpdateDataSource(pid, name, url, user, password);
         } else {
             this.dataSourceFactory = null;
             this.pid = null;
