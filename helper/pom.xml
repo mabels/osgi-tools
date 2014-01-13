@@ -19,7 +19,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.nextaudience.clustor</groupId>
-			<artifactId>tools-datasource-dynamic</artifactId>			
+			<artifactId>tools-datasource-interfaces</artifactId>			
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>

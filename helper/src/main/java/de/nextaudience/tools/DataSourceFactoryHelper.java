@@ -31,7 +31,7 @@ public class DataSourceFactoryHelper {
             this.dataSourceFactory = dataSourceFactory;
             this.pid = pid;
             this.url = url;
-            dataSourceFactory.createOrUpdateDataSource(pid, name, url, user, password);
+            dataSourceFactory.createDataSource(pid, name, url, user, password);
         } else {
             this.dataSourceFactory = null;
             this.pid = null;
