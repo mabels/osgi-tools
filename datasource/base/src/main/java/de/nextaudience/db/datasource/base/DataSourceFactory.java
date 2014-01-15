@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverConnectionFactory;
@@ -74,7 +75,7 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
             props.put("driver."+key, dasr.serviceReference.getProperty(key).toString());
         }
         LOGGER.info("DataSourceFactory:createOrUpdateDataSource:{}:{}", pid, driverName);
-        final DataSource dataSource = create(dasr.driverFactory.get(), props);
+        create(dasr.driverFactory.get(), props, dataSourceParams);
         props.put("osgi.jndi.service.name", getString("name", props));
         props.put(Constants.SERVICE_PID, pid);
         props.put("instance.name", getString("name", props));
@@ -83,7 +84,8 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
             final String key = keys.nextElement();
             LOGGER.info("{}={}", key, props.get(key));
         }  
-        dataSourceParams.serviceRegistration = context.registerService(DataSource.class.getCanonicalName(), dataSource, props);
+        dataSourceParams.serviceRegistration = context.registerService(DataSource.class.getCanonicalName(), 
+			dataSourceParams.poolingDataSource, props);
         return pid;
     }
 
@@ -92,6 +94,11 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         if (dsp != null) {
             LOGGER.info("DataSourceFactory:deleteDataSource:{}", pid);
             context.ungetService(dsp.serviceRegistration.getReference());
+		try {
+			dsp.poolableConnectionFactory.getPool().close();
+		} catch (Exception ex) {
+			LOGGER.error("deleteDataSource:{} {}", pid, ex);
+		}
             pid2dataSourceParams.remove(pid);
         }
     }
@@ -193,7 +200,7 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
     }
 
 
-    public static DataSource create(final Driver driver, Dictionary<String, String> prop) {
+    public static DataSourceParams create(final Driver driver, Dictionary<String, String> prop, DataSourceParams dsp) {
         final Properties driverProp = new Properties();
         final Enumeration<String> keys = prop.keys();
         while (keys.hasMoreElements()) {
@@ -225,19 +232,20 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
          
         };
 
+
         final GenericObjectPool connectionPool = new GenericObjectPool();
         connectionPool.setMaxActive(30);
         final KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
 
-        final PoolableConnectionFactory factory = new PoolableConnectionFactory(
+        dsp.poolableConnectionFactory = new PoolableConnectionFactory(
             connectionFactory,
             connectionPool,
             stmtPoolFactory,
             getString("driver.sql.validation.query", prop),
             true,
             false);
-        return new PoolingDataSource(factory.getPool());
-
+        dsp.poolingDataSource = new PoolingDataSource(dsp.poolableConnectionFactory.getPool());
+	return dsp;
     }
 
 }

@@ -7,6 +7,8 @@
 package de.nextaudience.db.datasource.base;
 
 import java.util.Dictionary;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
+import org.apache.commons.dbcp.PoolingDataSource;
 import org.osgi.framework.ServiceRegistration;
 
 /**
@@ -16,6 +18,10 @@ import org.osgi.framework.ServiceRegistration;
 public class DataSourceParams {
     public ServiceRegistration serviceRegistration;
     public final Dictionary<String, String> props;
+
+    public PoolableConnectionFactory poolableConnectionFactory;
+    public PoolingDataSource poolingDataSource;
+
     
     /**
      *
