@@ -33,7 +33,7 @@
     <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.cli/1.2.0</bundle>
 
     <bundle>mvn:com.adviser.karaf.commands/henplus/1.0.1</bundle>
-    <configfile finalname="/etc/de.nextaudience.db.datasource.base.DataSourcesCfgFile-na.cfg">mvn:com.nextaudience.clustor/tools-datasource-aggregation/${project.version}/cfg</configfile>
+    <configfile finalname="/etc/de.nextaudience.db.datasource.base.DataSourcesCfgFile-na.cfg">mvn:com.nextaudience.clustor/tools-datasource-base/${project.version}/cfg</configfile>
   </feature>
 
 </features>

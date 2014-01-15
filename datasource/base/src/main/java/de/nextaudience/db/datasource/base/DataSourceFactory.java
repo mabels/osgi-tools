@@ -44,20 +44,13 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
 
     private static final Map<String, DataSourceParams> pid2dataSourceParams = new HashMap<String, DataSourceParams>();
 
-    public String createDataSource(String name, String url, String user, String password) {
-	final Dictionary<String, String> props = new Hashtable<String, String>();
-	props.put("name", name);
-	props.put("url", url);
-	props.put("user", user);
-	props.put("password", password);
-    	return createDataSource(props);
-    }
-    
-    
     public String createDataSource(Dictionary<String, String> props) {
         final String pid = props.get(Constants.SERVICE_PID);
         if (pid == null) {
-            LOGGER.error("DataSourceFactory:createDataSource:needs Constants.SERVICE_PID set");
+            LOGGER.error("DataSourceFactory:createDataSource: property '" + Constants.SERVICE_PID + "' is not set");
+        }
+        if (props.get("driver") == null) {
+            LOGGER.error("DataSourceFactory:createDataSource: property 'driver' is not set");
         }
         final DataSourceParams dataSourceParams = new DataSourceParams(props);
         pid2dataSourceParams.put(pid, dataSourceParams);
@@ -65,7 +58,7 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         final String driverName = props.get("driver");
         final DriverAndServiceReference dasr = findByName(driverName);
         if (dasr == null) {
-            LOGGER.info("createDataSource:{} no driver found with name {}", 
+            LOGGER.warn("createDataSource:{} no driver found with name {}, will be retried later", 
                 props.get(Constants.SERVICE_PID), driverName);
             return null;
         }
@@ -176,21 +169,25 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
 
     @Unbind(optional = true, aggregate = true)
     public void delDriver(DriverFactory driver, ServiceReference<DriverFactory> sr) {
-        final String name = sr.getProperty("name").toString();
-        final String fullName = sr.getProperty("fullName").toString();
-        LOGGER.info("DataSourceFactory:delDriver:{}", driver.getClass().getCanonicalName());
-        drivers.remove(findByName(name));
-        drivers.remove(findByName(fullName));
-        final List<DataSourceParams> toRenew = new LinkedList<DataSourceParams>();
-        for(Map.Entry<String, DataSourceParams> entry: pid2dataSourceParams.entrySet()) {
-            if (isDriver(sr, entry.getValue().serviceRegistration.getReference())) {
-                toRenew.add(entry.getValue());
+        try {
+            final String name = sr.getProperty("name").toString();
+            final String fullName = sr.getProperty("fullName").toString();
+            LOGGER.info("DataSourceFactory:delDriver:{}", driver.getClass().getCanonicalName());
+            drivers.remove(findByName(name));
+            drivers.remove(findByName(fullName));
+            final List<DataSourceParams> toRenew = new LinkedList<DataSourceParams>();
+            for(Map.Entry<String, DataSourceParams> entry: pid2dataSourceParams.entrySet()) {
+                if (isDriver(sr, entry.getValue().serviceRegistration.getReference())) {
+                    toRenew.add(entry.getValue());
+                }
             }
-        }
-        for(DataSourceParams dsp : toRenew) {
-            deleteDataSource(dsp.props.get(Constants.SERVICE_PID));
-            dsp.serviceRegistration = null;
-            pid2dataSourceParams.put(dsp.props.get(Constants.SERVICE_PID), dsp);
+            for(DataSourceParams dsp : toRenew) {
+                deleteDataSource(dsp.props.get(Constants.SERVICE_PID));
+                dsp.serviceRegistration = null;
+                pid2dataSourceParams.put(dsp.props.get(Constants.SERVICE_PID), dsp);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error while deleting JDBC driver: ", e.getMessage());
         }
     }
     

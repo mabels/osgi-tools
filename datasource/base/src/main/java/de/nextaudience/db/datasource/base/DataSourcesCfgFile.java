@@ -1,5 +1,7 @@
 package de.nextaudience.db.datasource.base;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -59,15 +61,18 @@ public class DataSourcesCfgFile {
             for (Map.Entry<String, Dictionary<String, String>> entry : splittedProperties(properties).entrySet()) {
                 final String name = entry.getKey();
                 final Dictionary<String, String> dict = entry.getValue();
-                LOGGER.info("DataSourcesFactory:updated:{}", dict.get("name"));
-                Enumeration<String> keys = properties.keys();
+                LOGGER.info("DataSourcesCfgFile:updated:{}", dict.get("name"));
+                Enumeration<String> keys = dict.keys();
                 while (keys.hasMoreElements()) {
                     final String key = keys.nextElement();
-                    LOGGER.info("DataSourcesCfgFile:updated:{}=>{}={}", name, key, properties.get(key));
+                    LOGGER.info("DataSourcesCfgFile:updated:{}=>{}={}", name, key, dict.get(key));
                 }
                 dict.put(Constants.SERVICE_PID, String.format("DS-%s", 
-                    DataSourceFactory.getString("name", dict)));          
-                dataSources.add(dataSourceFactory.createDataSource(dict));
+                    DataSourceFactory.getString("name", dict)));    
+                String pid = dataSourceFactory.createDataSource(dict);
+                if (pid != null) {
+                    dataSources.add(pid);
+                }
             }
         }
     }
@@ -91,7 +96,7 @@ public class DataSourcesCfgFile {
 
     private void close() {
         for (String pid : dataSources) {
-            LOGGER.info("DataSourcesFactory:close:{}", pid);
+            LOGGER.info("DataSourcesCfgFile:close:{}", pid);
             dataSourceFactory.deleteDataSource(pid);
         }
         dataSources.clear();
@@ -100,11 +105,12 @@ public class DataSourcesCfgFile {
     private static Map<String, Dictionary<String, String>> splittedProperties(Dictionary<String, String> properties) {
         //LOGGER.info("splittedProperties:{}", properties);
         final Map<String, Dictionary<String, String>> dicts = new HashMap<>();
+        List<String> validKeys = Arrays.asList(properties.get("datasources").split(","));
         Enumeration<String> keys = properties.keys();
         while (keys.hasMoreElements()) {
             final String key = keys.nextElement();
             final SplittedKey split = SplittedKey.create(key);
-            if (split == null) {
+            if (split == null || !validKeys.contains(split.first)) {
                 continue;
             }
             Dictionary<String, String> d = dicts.get(split.first);
