@@ -1,6 +1,5 @@
 package de.nextaudience.db.datasource.base;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -21,11 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Convenience class to gather all db connections into one file that can get
- * deployed as feature.
+ * Convenience class to gather all db connections into one file that can get deployed as feature.
  *
- * Should not be used in parallel to the other activators as there is currently
- * no detection of duplicate db configurations.
+ * Should not be used in parallel to the other activators as there is currently no detection of duplicate db configurations.
  *
  * This class reuses the h2 and postgres activatirs with its own bundle context.
  */
@@ -33,6 +30,8 @@ import org.slf4j.LoggerFactory;
 public class DataSourcesCfgFile {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourcesCfgFile.class);
+
+    private static final String PROP_DATASOURCES = "datasources";
 
     private final BundleContext bundleContext;
 
@@ -43,6 +42,7 @@ public class DataSourcesCfgFile {
     private Dictionary<String, String> properties = null;
     private final List<String> dataSources = new LinkedList<String>();
 
+
     public DataSourcesCfgFile(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
@@ -50,7 +50,7 @@ public class DataSourcesCfgFile {
     @Updated
     public void updated(Dictionary<String, String> properties) {
         LOGGER.info("DataSourcesCfgFile:updated");
-        if (properties == null || properties.isEmpty()) {         
+        if (properties == null || properties.isEmpty()) {
             close();
             return;
         }
@@ -67,8 +67,8 @@ public class DataSourcesCfgFile {
                     final String key = keys.nextElement();
                     LOGGER.info("DataSourcesCfgFile:updated:{}=>{}={}", name, key, dict.get(key));
                 }
-                dict.put(Constants.SERVICE_PID, String.format("DS-%s", 
-                    DataSourceFactory.getString("name", dict)));    
+                dict.put(Constants.SERVICE_PID, String.format("DS-%s",
+                    DataSourceFactory.getString("name", dict)));
                 String pid = dataSourceFactory.createDataSource(dict);
                 if (pid != null) {
                     dataSources.add(pid);
@@ -101,11 +101,16 @@ public class DataSourcesCfgFile {
         }
         dataSources.clear();
     }
-  
+
     private static Map<String, Dictionary<String, String>> splittedProperties(Dictionary<String, String> properties) {
         //LOGGER.info("splittedProperties:{}", properties);
+        String datasources = properties.get(PROP_DATASOURCES);
+        if (datasources == null) {
+            throw new IllegalArgumentException("Missing mandatory property '" + PROP_DATASOURCES + "'");
+        }
+
         final Map<String, Dictionary<String, String>> dicts = new HashMap<>();
-        List<String> validKeys = Arrays.asList(properties.get("datasources").split(","));
+        List<String> validKeys = Arrays.asList(datasources.split(","));
         Enumeration<String> keys = properties.keys();
         while (keys.hasMoreElements()) {
             final String key = keys.nextElement();
