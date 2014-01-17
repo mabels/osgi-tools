@@ -10,10 +10,12 @@
     <feature version="${project.version}">com.nextaudience.clustor.org.osgi</feature>
     <feature version="${project.version}">com.nextaudience.clustor.ipojo</feature>
     <feature version="${project.version}">com.nextaudience.clustor.jdk-classes</feature>
-    <feature version="${project.version}">com.nextaudience.clustor.logger</feature>
-    <!-- 
+    <feature version="${project.version}">com.nextaudience.clustor.logger</feature>    
     <feature version="${project.version}">com.nextaudience.clustor.xerces</feature> 
+
     <bundle>mvn:com.h2database/com.springsource.org.h2/1.0.71</bundle>
+    <bundle>mvn:org.apache.xmlcommons/com.springsource.org.apache.xmlcommons/1.3.4</bundle>
+    <!-- 
     <bundle>mvn:org.postgresql/com.springsource.org.postgresql.jdbc3/8.3.603</bundle>
     -->
     <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.pool/1.5.3</bundle>
