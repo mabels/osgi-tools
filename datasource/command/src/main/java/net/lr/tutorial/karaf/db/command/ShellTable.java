@@ -23,7 +23,7 @@ import java.util.List;
 public class ShellTable {
     public List<String> header = new ArrayList<String>();
     public List<List<String>> content = new ArrayList<List<String>>();
-    public int maxColSize = 25;
+    public int maxColSize = 50;
     
     public List<String> addRow() {
         List<String> row = new ArrayList<String>();
