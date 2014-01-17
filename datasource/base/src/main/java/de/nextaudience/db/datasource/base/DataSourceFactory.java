@@ -1,7 +1,5 @@
 package de.nextaudience.db.datasource.base;
 
-import de.nextaudience.db.datasource.DriverFactory;
-import de.nextaudience.tools.IPOJOInstanceHelper;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -13,10 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.DriverConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.KeyedObjectPoolFactory;
@@ -32,9 +30,11 @@ import org.apache.felix.ipojo.annotations.Validate;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.nextaudience.db.datasource.DriverFactory;
+import de.nextaudience.tools.IPOJOInstanceHelper;
 
 @Component
 @Instantiate
@@ -44,6 +44,11 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceFactory.class);
 
     private static final Map<String, DataSourceParams> pid2dataSourceParams = new HashMap<String, DataSourceParams>();
+
+    private final List<DriverAndServiceReference> drivers = new LinkedList<DriverAndServiceReference>();
+
+    private IPOJOInstanceHelper ipojoInstanceHelper;
+    
 
     public String createDataSource(Dictionary<String, String> props) {
         final String pid = props.get(Constants.SERVICE_PID);
@@ -55,39 +60,34 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         }
         final DataSourceParams dataSourceParams = new DataSourceParams(props);
         pid2dataSourceParams.put(pid, dataSourceParams);
-        
+
         final String driverName = props.get("driver");
         final DriverAndServiceReference dasr = findByName(driverName);
         if (dasr == null) {
-            LOGGER.warn("createDataSource:{} no driver found with name {}, will be retried later", 
-                props.get(Constants.SERVICE_PID), driverName);
+            LOGGER.warn("createDataSource:{} no driver found with name {}, will be retried later",
+                    props.get(Constants.SERVICE_PID), driverName);
             return null;
         }
         LOGGER.info("DriverAndServiceReference:{}=>{}", driverName, dasr);
         for (String key : dasr.serviceReference.getPropertyKeys()) {
             LOGGER.info("ServiceReference:driver.{}=>{}", key, dasr.serviceReference.getProperty(key));
-            props.put("driver."+key, dasr.serviceReference.getProperty(key).toString());
+            props.put("driver." + key, dasr.serviceReference.getProperty(key).toString());
         }
         LOGGER.info("DataSourceFactory:createOrUpdateDataSource:{}:{}", pid, driverName);
         create(dasr.driverFactory.get(), props, dataSourceParams);
-
 
         props.put("osgi.jndi.service.name", getString("name", props));
         props.put(Constants.SERVICE_PID, pid);
         props.put("instance.name", getString("name", props));
         Enumeration<String> keys = props.keys();
-	final Dictionary<String, Object> soProps = new Hashtable<String, Object>(); 	
+        final Dictionary<String, Object> soProps = new Hashtable<String, Object>();
         while (keys.hasMoreElements()) {
             final String key = keys.nextElement();
-	    soProps.put(key, props.get(key));
+            soProps.put(key, props.get(key));
             LOGGER.info("{}={}", key, props.get(key));
-        }  
-	soProps.put("dataSourceParams", dataSourceParams);
-	(new IPOJOInstanceHelper(context)).create(DataSource.class, IPojoPoolingDataSource.class.getName(), pid, soProps);
-	/*
-        dataSourceParams.serviceRegistration = context.registerService(DataSource.class.getCanonicalName(), 
-			dataSourceParams.poolingDataSource, props);
-	*/
+        }
+        soProps.put("dataSourceParams", dataSourceParams);
+        dataSourceParams.instanceHolder = ipojoInstanceHelper.create(DataSource.class, IPojoPoolingDataSource.class.getName(), pid, soProps);
         return pid;
     }
 
@@ -95,22 +95,19 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         final DataSourceParams dsp = pid2dataSourceParams.get(pid);
         if (dsp != null) {
             LOGGER.info("DataSourceFactory:deleteDataSource:{}", pid);
-            context.ungetService(dsp.serviceRegistration.getReference());
-		try {
-			dsp.poolableConnectionFactory.getPool().close();
-		} catch (Exception ex) {
-			LOGGER.error("deleteDataSource:{} {}", pid, ex);
-		}
+            dsp.instanceHolder.dispose();
+            try {
+                dsp.poolableConnectionFactory.getPool().close();
+            } catch (Exception ex) {
+                LOGGER.error("deleteDataSource:{} {}", pid, ex);
+            }
             pid2dataSourceParams.remove(pid);
         }
     }
 
-    private final List<DriverAndServiceReference> drivers = new LinkedList<DriverAndServiceReference>();
-
-    private final BundleContext context;
 
     public DataSourceFactory(BundleContext context) {
-        this.context = context;
+        this.ipojoInstanceHelper = new IPOJOInstanceHelper(context);
     }
 
     @Validate

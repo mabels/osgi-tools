@@ -7,9 +7,14 @@
 package de.nextaudience.db.datasource.base;
 
 import java.util.Dictionary;
+
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.osgi.framework.ServiceRegistration;
+
+import de.nextaudience.tools.IPOJOInstanceHelper;
 
 /**
  *
@@ -21,7 +26,7 @@ public class DataSourceParams {
 
     public PoolableConnectionFactory poolableConnectionFactory;
     public PoolingDataSource poolingDataSource;
-
+    public IPOJOInstanceHelper.InstanceHolder<DataSource> instanceHolder;
     
     /**
      *
