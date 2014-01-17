@@ -1,6 +1,7 @@
 package de.nextaudience.db.datasource.base;
 
 import de.nextaudience.db.datasource.DriverFactory;
+import de.nextaudience.tools.IPOJOInstanceHelper;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -69,16 +70,24 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         }
         LOGGER.info("DataSourceFactory:createOrUpdateDataSource:{}:{}", pid, driverName);
         create(dasr.driverFactory.get(), props, dataSourceParams);
+
+
         props.put("osgi.jndi.service.name", getString("name", props));
         props.put(Constants.SERVICE_PID, pid);
         props.put("instance.name", getString("name", props));
         Enumeration<String> keys = props.keys();
+	final Dictionary<String, Object> soProps = new Hashtable<String, Object>(); 	
         while (keys.hasMoreElements()) {
             final String key = keys.nextElement();
+	    soProps.put(key, props.get(key));
             LOGGER.info("{}={}", key, props.get(key));
         }  
+	soProps.put("dataSourceParams", dataSourceParams);
+	(new IPOJOInstanceHelper(context)).create(DataSource.class, IPojoPoolingDataSource.class.getName(), pid, soProps);
+	/*
         dataSourceParams.serviceRegistration = context.registerService(DataSource.class.getCanonicalName(), 
 			dataSourceParams.poolingDataSource, props);
+	*/
         return pid;
     }
 
@@ -196,7 +205,6 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         return (value instanceof String) ? (String) value : null;
     }
 
-
     public static DataSourceParams create(final Driver driver, Dictionary<String, String> prop, DataSourceParams dsp) {
         final Properties driverProp = new Properties();
         final Enumeration<String> keys = prop.keys();
@@ -242,6 +250,8 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
             true,
             false);
         dsp.poolingDataSource = new PoolingDataSource(dsp.poolableConnectionFactory.getPool());
+
+
 	return dsp;
     }
 
