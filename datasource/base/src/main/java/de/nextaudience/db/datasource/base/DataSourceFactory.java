@@ -1,5 +1,8 @@
 package de.nextaudience.db.datasource.base;
 
+import de.nextaudience.db.datasource.DriverFactory;
+import de.nextaudience.tools.IPOJOInstanceHelper;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -18,6 +21,7 @@ import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.KeyedObjectPoolFactory;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.felix.ipojo.annotations.Bind;
@@ -237,19 +241,31 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
 
         final GenericObjectPool connectionPool = new GenericObjectPool();
         connectionPool.setMaxActive(30);
-        final KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null);
+
+	GenericKeyedObjectPool.Config stmtConfig = new GenericKeyedObjectPool.Config();
+	//stmtConfig.lifo = true;
+	stmtConfig.maxActive = 1024;
+	stmtConfig.maxIdle = 64;
+	stmtConfig.maxTotal = -1;
+	stmtConfig.whenExhaustedAction = GenericObjectPool.WHEN_EXHAUSTED_FAIL;
+	stmtConfig.timeBetweenEvictionRunsMillis = 500;
+
+        final KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null, stmtConfig);
+
+
 
         dsp.poolableConnectionFactory = new PoolableConnectionFactory(
             connectionFactory,
             connectionPool,
-            stmtPoolFactory,
-            getString("driver.sql.validation.query", prop),
+            null,
+            null, //getString("driver.sql.validation.query", prop),
             true,
-            false);
+            true);
         dsp.poolingDataSource = new PoolingDataSource(dsp.poolableConnectionFactory.getPool());
 
 
 	return dsp;
     }
+
 
 }

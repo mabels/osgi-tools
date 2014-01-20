@@ -20,7 +20,7 @@
     -->
     <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.pool/1.5.3</bundle>
     <bundle>mvn:javax.transaction/com.springsource.javax.transaction/1.1.0</bundle>
-    <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3</bundle>
+    <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.2.2_7</bundle>
     <bundle>mvn:javax.servlet/com.springsource.javax.servlet/${javax.servlet.version}</bundle>
     <bundle>mvn:com.nextaudience.clustor/tools-helper/${project.version}</bundle>
     <bundle>mvn:com.nextaudience.clustor/tools-datasource-interfaces/${project.version}</bundle>
