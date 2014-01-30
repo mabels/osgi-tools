@@ -1,7 +1,11 @@
 package de.nextaudience.db.datasource.base;
 
+import de.nextaudience.db.datasource.DriverFactory;
+import de.nextaudience.tools.IPOJOInstanceHelper;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -11,9 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
@@ -31,9 +33,6 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.nextaudience.db.datasource.DriverFactory;
-import de.nextaudience.tools.IPOJOInstanceHelper;
 
 @Component
 @Instantiate
@@ -58,6 +57,7 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         if (props.get("driver") == null) {
             LOGGER.error("DataSourceFactory:createDataSource: property 'driver' is not set");
         }
+
         final DataSourceParams dataSourceParams = new DataSourceParams(props);
         pid2dataSourceParams.put(pid, dataSourceParams);
 
@@ -107,6 +107,66 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
             pid2dataSourceParams.remove(pid);
         }
     }
+
+	private DataSource findDataSourceByName(String dname) {
+		for(DataSourceParams dsp : pid2dataSourceParams.values()) {
+			if (dsp.props.get("dataBaseName").equals(dname)) {
+				return dsp.poolingDataSource;
+			}
+		}
+		return null;
+	}
+
+	private DataSource getSystemDS(Dictionary<String, String> props) {
+		final String databaseName = props.get("dataBaseName");
+		final String systemDataSourceName = props.get("createDatabaseDataSourceName");
+		if (databaseName == null || databaseName.isEmpty() ||
+			systemDataSourceName == null || systemDataSourceName.isEmpty()) {
+			LOGGER.error("props must contain key:dataBaseName or key:createDatabaseDataSourceName");
+			return null;
+		}
+		final DataSource systemds = findDataSourceByName(systemDataSourceName);
+		if (systemds == null) {
+			LOGGER.error("can not find datasource from name="+databaseName);
+			return null;
+		}
+		return systemds;
+	}
+
+	private void runStmt(DataSource ds, String sql, String ...params) throws SQLException {
+		final Connection connection = ds.getConnection();
+		try {
+			final PreparedStatement ps = connection.prepareStatement(sql);
+			int idx = 0;
+			for (String param : params) {
+				ps.setString(idx++, param);
+			}
+			final ResultSet rs = ps.executeQuery();
+			LOGGER.error("RESULT Set:"+rs);
+			ps.close();
+		} finally {
+			connection.close();
+		}
+	}
+
+	public String createdatabaseFromName(Dictionary<String, String> props) throws SQLException {
+		final DataSource systemds = getSystemDS(props);
+		if (systemds == null) {
+			return null;
+		}
+		runStmt(systemds, "create database ?", props.get("dataBaseName"));
+		return createDataSource(props);
+	}
+
+	public void dropdatabase(String pid) throws SQLException {
+		Dictionary<String, String> props = pid2dataSourceParams.get(pid).props;
+		final DataSource systemds = getSystemDS(props);
+		if (systemds == null) {
+			return;
+		}
+		deleteDataSource(pid);
+		runStmt(systemds, "drop database ?", props.get("dataBaseName"));	
+	}
 
     public DataSourceFactory(BundleContext context) {
         this.ipojoInstanceHelper = new IPOJOInstanceHelper(context);
