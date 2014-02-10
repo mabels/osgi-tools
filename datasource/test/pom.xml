@@ -13,8 +13,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.nextaudience.clustor</groupId>
-      <artifactId>logger</artifactId>      
+      <groupId>de.nextaudience.externals</groupId>
+      <artifactId>logger</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.felix</groupId>

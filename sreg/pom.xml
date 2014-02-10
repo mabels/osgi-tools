@@ -24,8 +24,8 @@
       <version>2.2.5</version>    
     </dependency>
     <dependency>
-      <groupId>com.nextaudience.clustor</groupId>
-      <artifactId>logger</artifactId>    
+      <groupId>de.nextaudience.externals</groupId>
+      <artifactId>logger</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

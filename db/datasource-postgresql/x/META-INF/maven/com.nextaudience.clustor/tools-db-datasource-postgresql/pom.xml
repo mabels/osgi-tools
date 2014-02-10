@@ -31,8 +31,8 @@
 </dependency>
 -->
 		<dependency>
-			<groupId>com.nextaudience.clustor</groupId>
-			<artifactId>logger</artifactId>
+      <groupId>de.nextaudience.externals</groupId>
+      <artifactId>logger</artifactId>
       <scope>compile</scope>
 		</dependency>
 
