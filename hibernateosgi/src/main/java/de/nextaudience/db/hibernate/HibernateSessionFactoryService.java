@@ -1,6 +1,8 @@
 package de.nextaudience.db.hibernate;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -72,12 +74,18 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
     /** {@inheritDoc} */
     public SessionFactory create(final Bundle requestingBundle, final String hibernateCfg,
             final ConnectionProvider connectionProvider, final DialectFactory dialectFactory,
-            final Map<String, NamedSQLQueryDefinition> namedSQLQueries) {
+            final Map<String, NamedSQLQueryDefinition> namedSQLQueries, final Properties configurationProperties) {
 
         this.osgiClassLoader.addBundle(requestingBundle);
 
         final Configuration configuration = new Configuration();
         configuration.getProperties().put(AvailableSettings.JTA_PLATFORM, this.osgiJtaPlatform);
+        // allow to additional custom properties for Session creation
+        if (configurationProperties != null) {
+            for (Entry<Object, Object> e : configurationProperties.entrySet()){
+                configuration.getProperties().put(e.getKey(), e.getValue());
+            }
+        }
         configuration.configure(hibernateCfg);
 
         final BootstrapServiceRegistryBuilder builder = new BootstrapServiceRegistryBuilder();

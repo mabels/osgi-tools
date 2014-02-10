@@ -1,6 +1,7 @@
 package de.nextaudience.db.hibernate;
 
 import java.util.Map;
+import java.util.Properties;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
@@ -11,7 +12,7 @@ import org.osgi.framework.Bundle;
 public interface HibernateSessionFactoryCreator {
 
     SessionFactory create(final Bundle requestingBundle, final String hibernateCfg, final ConnectionProvider connectionProvider,
-            final DialectFactory dialectFactory, final Map<String, NamedSQLQueryDefinition> namedSQLQueries);
+            final DialectFactory dialectFactory, final Map<String, NamedSQLQueryDefinition> namedSQLQueries, final Properties configurationProperties);
 
     void unregisterBundle(final Bundle requestingBundle);
 }

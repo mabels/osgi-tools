@@ -104,8 +104,10 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         final DataSourceParams dsp = pid2dataSourceParams.get(pid);
         if (dsp != null) {
             LOGGER.info("DataSourceFactory:deleteDataSource:{}", pid);
-            dsp.instanceHolder.dispose();
             try {
+                if (dsp.instanceHolder != null) {
+                    dsp.instanceHolder.dispose();
+                }
                 dsp.poolableConnectionFactory.getPool().close();
             } catch (final Exception ex) {
                 LOGGER.error("deleteDataSource:{} {}", pid, ex);
