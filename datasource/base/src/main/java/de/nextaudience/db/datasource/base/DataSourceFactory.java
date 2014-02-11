@@ -2,6 +2,7 @@ package de.nextaudience.db.datasource.base;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Dictionary;
@@ -160,6 +161,28 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
         LOGGER.info("Successfully dropped database for PID {}.", pid);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean existsDatabase(final Dictionary<String, String> props) throws SQLException {
+        final DataSource systemds = getSystemDS(props);
+        if (systemds == null) {
+            LOGGER.error("Could not check database existence for {}. No system datasource found to drop database for PID.", props.get(PROP_CREATE_DATABASE_NAME));
+            return false;
+        }
+        String sql = "select * from pg_database where datname = '" + props.get(PROP_CREATE_DATABASE_NAME) + "'";
+        boolean result = false;
+        final Connection connection = systemds.getConnection();
+        try {
+            final Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            result = (rs != null && rs.next());
+            st.close();
+        } finally {
+            connection.close();
+        }
+        return result;
+    }
+
     private DataSource findDataSourceByName(final String dname) {
         for (final DataSourceParams dsp : pid2dataSourceParams.values()) {
             if (dname != null && dname.equals(dsp.props.get("name"))) {
@@ -195,7 +218,7 @@ public class DataSourceFactory implements de.nextaudience.db.datasource.DataSour
             connection.close();
         }
     }
-
+    
     public DataSourceFactory(final BundleContext context) {
         this.ipojoInstanceHelper = new IPOJOInstanceHelper(context);
     }

@@ -42,10 +42,10 @@ public class IPOJOInstanceHelper {
         // get the just created instance object from the OSGI registry and return it
         final I instance = this.osgiHelper.getServiceObject(interfaceClass, "(instance.name=" + ci.getInstanceName() + ")");
         if (instance != null && interfaceClass.isInstance(instance)) {
-            LOG.info("Created instance of class '{}' with instance name '{}'successfully.", instanceClassName,
+            LOG.debug("Created instance of class '{}' with instance name '{}'successfully.", instanceClassName,
                     ci.getInstanceName());
         } else {
-            LOG.info("Creation of instance of class '{}' failed.", instanceClassName);
+            LOG.warn("Creation of instance of class '{}' failed.", instanceClassName);
         }
         return new InstanceHolder<I>(instance, ci);
     }

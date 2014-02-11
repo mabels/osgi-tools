@@ -47,6 +47,7 @@ public class DataSourceFactoryHelper {
     public void dispose() {
         if (this.pid != null) {
             this.dataSourceFactory.deleteDataSource(this.pid);
+            this.pid = null;
         }
     }
 

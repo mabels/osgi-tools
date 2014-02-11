@@ -45,7 +45,7 @@ public interface DataSourceFactory {
     String createDatabaseFromName(Dictionary<String, String> props) throws SQLException;
 
     /**
-     * Drop a database based on the properties provided. SImilar to the createDatabaseFromName() method the correct properties must
+     * Drop a database based on the properties provided. Similar to the createDatabaseFromName() method the correct properties must
      * be provided.
      * 
      * @param props
@@ -55,5 +55,17 @@ public interface DataSourceFactory {
      *             in case of an error
      */
     void dropDatabase(Dictionary<String, String> props) throws SQLException;
+
+    /**
+     * Check if a database exists based on the properties provided. Similar to the createDatabaseFromName() method the correct
+     * properties must be provided.
+     * 
+     * @param props
+     *            dictionary containing at least the following properties: <tt>driver, name, service.pid, url, user, password, 
+     *            createDatabaseDataSourceName, createDatabaseName</tt>
+     * @returntrue, if database already exists, false otherwise
+     * @throws SQLException
+     */
+    boolean existsDatabase(final Dictionary<String, String> props) throws SQLException;
 
 }
