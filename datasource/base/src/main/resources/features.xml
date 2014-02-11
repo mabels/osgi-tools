@@ -10,7 +10,7 @@
     <feature version="${project.version}">com.nextaudience.clustor.org.osgi</feature>
     <feature version="${project.version}">com.nextaudience.clustor.ipojo</feature>
     <feature version="${project.version}">com.nextaudience.clustor.jdk-classes</feature>
-    <feature version="${project.version}">com.nextaudience.clustor.logger</feature>    
+    <feature version="${logger.version}">de.nextaudience.externals.logger</feature>    
     <feature version="${project.version}">com.nextaudience.clustor.xerces</feature> 
 
     <bundle>mvn:com.h2database/com.springsource.org.h2/1.0.71</bundle>
