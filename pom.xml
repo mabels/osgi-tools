@@ -10,7 +10,6 @@
   <artifactId>tools</artifactId>
   <name>Clustor :: Tools</name>
   <modules>
-    <module>accesslog2solr</module>
     <module>datasource</module>
     <module>sreg</module>
     <module>helper</module>
