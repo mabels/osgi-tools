@@ -2,52 +2,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.nextaudience.clustor</groupId>
+    <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>tools-datasource-base</artifactId>
   <packaging>bundle</packaging>
-
-  <name>Clustor :: Tools :: datasource :: base</name>
-
+  <name>Osgi :: Tools :: datasource :: base</name>
   <dependencies>
     <dependency>
-      <groupId>de.nextaudience.externals</groupId>
-      <artifactId>logger</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
-
     <dependency>
-      <groupId>com.nextaudience.clustor</groupId>
-      <artifactId>tools-datasource-interfaces</artifactId>      
+      <groupId>com.adviser.osgi</groupId>
+      <artifactId>tools-datasource-interfaces</artifactId>
     </dependency>
-
     <dependency>
-      <groupId>com.nextaudience.clustor</groupId>
-      <artifactId>tools-helper</artifactId>      
+      <groupId>com.adviser.osgi</groupId>
+      <artifactId>tools-helper</artifactId>
     </dependency>
-
-
     <dependency>
       <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.commons-dbcp</artifactId>      
+      <artifactId>org.apache.servicemix.bundles.commons-dbcp</artifactId>
     </dependency>
-
-    
+    <!--
       <dependency>
         <groupId>org.apache.felix</groupId>
         <artifactId>org.apache.felix.ipojo</artifactId>
       </dependency>    
-          <dependency>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>org.apache.felix.ipojo.annotations</artifactId>
-      </dependency>    
-    
-    
-    
+    -->
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.ipojo.annotations</artifactId>
+    </dependency>
   </dependencies>
   <build>
-
     <finalName>${project.artifactId}</finalName>
     <resources>
       <resource>
@@ -55,9 +45,7 @@
         <filtering>true</filtering>
       </resource>
     </resources>
-
     <plugins>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -83,13 +71,10 @@
           </execution>
         </executions>
       </plugin>
-
-
-	<plugin>
-		<groupId>org.apache.felix</groupId>
-		<artifactId>maven-ipojo-plugin</artifactId>
-	</plugin>
-	
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-ipojo-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>

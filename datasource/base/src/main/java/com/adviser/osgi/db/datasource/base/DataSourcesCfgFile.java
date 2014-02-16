@@ -1,4 +1,4 @@
-package de.nextaudience.db.datasource.base;
+package com.adviser.osgi.db.datasource.base;
 
 import java.util.Arrays;
 import java.util.Dictionary;
@@ -36,7 +36,7 @@ public class DataSourcesCfgFile {
     private final BundleContext bundleContext;
 
     @Requires
-    private de.nextaudience.db.datasource.DataSourceFactory dataSourceFactory;
+    private com.adviser.osgi.db.datasource.DataSourceFactory dataSourceFactory;
 
     private boolean waitForStart = true;
     private Dictionary<String, String> properties = null;

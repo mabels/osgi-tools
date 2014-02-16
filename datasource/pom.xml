@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.nextaudience.clustor</groupId>
+    <groupId>com.adviser.osgi</groupId>
     <artifactId>tools</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>tools-datasource</artifactId>
   <packaging>pom</packaging>
-  <name>Clustor :: Tools :: datasource</name>
+  <name>Osgi :: Tools :: datasource</name>
   <modules>
     <module>interfaces</module>
     <module>command</module>
@@ -16,11 +16,5 @@
     <module>test</module>
     <module>postgresql</module>
     <module>h2</module>
-    <!--
-    <module>dynamic</module>
-    <module>aggregation</module>
-    -->
   </modules>
-  <build>
-  </build>
 </project>

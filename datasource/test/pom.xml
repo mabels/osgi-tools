@@ -2,19 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.nextaudience.clustor</groupId>
+    <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>tools-datasource-test</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  <name>Clustor :: Tools :: datasource :: test</name>
-
+  <name>Osgi :: Tools :: datasource :: test</name>
   <dependencies>
     <dependency>
-      <groupId>de.nextaudience.externals</groupId>
-      <artifactId>logger</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.felix</groupId>
@@ -30,9 +33,8 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
- <!--          	 <Bundle-Activator>de.nextaudience.db.datasource.test.Activator</Bundle-Activator>
- -->          </instructions>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+          </instructions>
         </configuration>
       </plugin>
       <plugin>

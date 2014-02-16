@@ -3,43 +3,41 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.adviser.osgi</groupId>
-    <artifactId>tools-datasource</artifactId>
+    <artifactId>tools</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>tools-datasource-h2</artifactId>
+  <groupId>com.adviser.osgi</groupId>
+  <artifactId>tools-hibernate</artifactId>
+  <name>Osgi :: Tools :: hibernate</name>
   <packaging>bundle</packaging>
-  <name>Osgi :: Tools :: datasource :: h2</name>
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.ipojo.annotations</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.adviser.osgi</groupId>
-      <artifactId>tools-datasource-interfaces</artifactId>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-osgi</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>1.0.75</version>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
-      <version>1.11</version>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-      <version>3.0.2</version>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-ehcache</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -48,6 +46,13 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-ipojo-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>ipojo-bundle</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
@@ -55,12 +60,13 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Embed-Dependency>
-							h2;scope=compile,
-							jts;scope=compile,
-							lucene-core;scope=compile
+							hibernate-osgi;scope=compile
 						</Embed-Dependency>
+            <Import-Package>
+							javax.transaction;version="[1.1,2)",
+							*
+						</Import-Package>
           </instructions>
         </configuration>
       </plugin>
