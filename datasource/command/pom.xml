@@ -10,13 +10,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.lr.tutorial.karaf.db</groupId>
   <artifactId>tools-datasource-command</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Osgi :: Tools :: datasource :: command</name>
   <packaging>bundle</packaging>
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <dependencies>
     <dependency>

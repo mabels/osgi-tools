@@ -1,9 +1,0 @@
-
-#osgi:install -s mvn:com.nextaudience.clustor/lucence/0.0.1-SNAPSHOT
-
-osgi:install -s mvn:com.nextaudience.clustor/jdk-classes/0.0.1-SNAPSHOT
-osgi:install -s mvn:org.osgi/org.osgi.compendium/4.3.0
-osgi:install -s mvn:com.nextaudience.clustor/tools-datasource-base/0.0.1-SNAPSHOT
-osgi:install -s mvn:com.nextaudience.clustor/tools-datasource-h2/0.0.1-SNAPSHOT
-
-dev:watch *

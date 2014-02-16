@@ -183,4 +183,21 @@
       </plugins>
     </pluginManagement>
   </build>
+
+
+
+  <distributionManagement>
+    <repository>
+        <id>nextaudience-artifactory</id>
+        <name>repo.v402.rz.ham.next-audience.net-releases</name>
+        <url>http://repo.v402.rz.ham.next-audience.net/artifactory/libs-release-local</url>
+    </repository>
+
+    <snapshotRepository>
+        <id>nextaudience-artifactory</id>
+        <name>repo.v402.rz.ham.next-audience.net-snapshots</name>
+        <url>http://repo.v402.rz.ham.next-audience.net/artifactory/libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
+
 </project>

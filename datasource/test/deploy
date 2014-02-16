@@ -1,2 +1,0 @@
-
-osgi:install -s mvn:com.nextaudience.clustor/tools-datasource-test/0.0.1-SNAPSHOT
