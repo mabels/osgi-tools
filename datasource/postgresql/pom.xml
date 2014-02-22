@@ -7,6 +7,7 @@
     <version>1.0.1</version>
   </parent>
   <artifactId>tools-datasource-postgresql</artifactId>
+  <version>1.0.2</version>
   <packaging>bundle</packaging>
   <name>Osgi :: Tools :: datasource :: postgresql</name>
   <dependencies>
@@ -42,11 +43,11 @@
       <artifactId>el-api</artifactId>
       <version>2.2.1-b04</version>
     </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>9.2-1002-jdbc4</version>
-    </dependency>
+	<dependency>
+	    <groupId>org.postgresql</groupId>
+	    <artifactId>postgresql</artifactId>
+	    <version>9.3-1101-jdbc41</version>
+	</dependency>
     <dependency>
       <groupId>javax.interceptor</groupId>
       <artifactId>javax.interceptor-api</artifactId>

@@ -8,6 +8,17 @@
   <name>Osgi :: Tools</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <osgitools.datasource.base.version>1.0.1</osgitools.datasource.base.version>         
+    <osgitools.datasource.command.version>1.0.1</osgitools.datasource.command.version>
+    <osgitools.datasource.h2.version>1.0.1</osgitools.datasource.h2.version>
+    <osgitools.datasource.interfaces.version>1.0.1</osgitools.datasource.interfaces.version>
+    <osgitools.datasource.postgresql.version>1.0.2</osgitools.datasource.postgresql.version>
+    <osgitools.datasource.test.version>1.0.1</osgitools.datasource.test.version>
+    <osgitools.helper.version>1.0.1</osgitools.helper.version>
+    <osgitools.hibernate.version>1.0.2</osgitools.hibernate.version>
+    <osgitools.sreg.version>1.0.1</osgitools.sreg.version>
+
     <ipojo.version>1.11.1-SNAPSHOT</ipojo.version>
     <ipojo.plugin.version>1.11.1</ipojo.plugin.version>
     <osgi.version>4.3.1</osgi.version>
@@ -138,17 +149,17 @@
       <dependency>
         <groupId>com.adviser.osgi</groupId>
         <artifactId>tools-datasource-interfaces</artifactId>
-        <version>${project.version}</version>
+        <version>${osgitools.datasource.interfaces.version}</version>
       </dependency>
       <dependency>
         <groupId>com.adviser.osgi</groupId>
         <artifactId>tools-helper</artifactId>
-        <version>${project.version}</version>
+        <version>${osgitools.helper.version}</version>
       </dependency>
       <dependency>
         <groupId>com.adviser.osgi</groupId>
         <artifactId>tools-datasource-base</artifactId>
-        <version>${project.version}</version>
+        <version>${osgitools.datasource.base.version}</version>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
