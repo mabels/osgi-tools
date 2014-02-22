@@ -267,11 +267,13 @@ public class OsgiClassLoader extends ClassLoader {
 
 
         public void inc(T key) {
+            if (key == null) return;
             Integer count = map.get(key);
             map.put(key, new Integer(count != null ? (count.intValue() + 1) : 1));
         }
 
         public void dec(T key) {
+            if (key == null) return;
             Integer count = map.get(key);
             if (count != null) {
                 if (count.intValue() == 1) {
@@ -283,7 +285,13 @@ public class OsgiClassLoader extends ClassLoader {
         }
 
         public int getCount(T key) {
-            return map.get(key);
+            if (key != null) {
+                Integer count = map.get(key);
+                if (count != null) {
+                    return count.intValue();
+                }
+            }
+            return 0;
         }
     }
 }
