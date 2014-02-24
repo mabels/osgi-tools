@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <artifactId>tools-datasource-base</artifactId>
   <packaging>bundle</packaging>

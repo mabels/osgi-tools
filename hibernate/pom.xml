@@ -4,11 +4,10 @@
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>com.adviser.osgi</groupId>
   <artifactId>tools-hibernate</artifactId>
-  <version>1.0.2</version>
   <name>Osgi :: Tools :: hibernate</name>
   <packaging>bundle</packaging>
   <dependencies>
