@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.adviser.osgi</groupId>
   <artifactId>tools</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3</version>
   <packaging>pom</packaging>
   <name>Osgi :: Tools</name>
   <properties>
@@ -16,7 +16,7 @@
     <osgitools.datasource.postgresql.version>1.0.2</osgitools.datasource.postgresql.version>
     <osgitools.datasource.test.version>1.0.1</osgitools.datasource.test.version>
     <osgitools.helper.version>1.0.1</osgitools.helper.version>
-    <osgitools.hibernate.version>1.0.2</osgitools.hibernate.version>
+    <osgitools.hibernate.version>1.0.3</osgitools.hibernate.version>
     <osgitools.sreg.version>1.0.1</osgitools.sreg.version>
 
     <ipojo.version>1.11.1-SNAPSHOT</ipojo.version>
