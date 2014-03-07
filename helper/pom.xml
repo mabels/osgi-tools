@@ -4,10 +4,11 @@
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>com.adviser.osgi</groupId>
   <artifactId>tools-helper</artifactId>
+  <version>1.0.2</version>
   <name>Osgi :: Tools :: helper</name>
   <packaging>bundle</packaging>
   <dependencies>
