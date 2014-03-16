@@ -4,10 +4,11 @@
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.3</version>
   </parent>
   <groupId>com.adviser.osgi</groupId>
   <artifactId>tools-helper</artifactId>
+  <version>1.0.2</version>
   <name>Osgi :: Tools :: helper</name>
   <packaging>bundle</packaging>
   <dependencies>
@@ -43,4 +44,18 @@
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+        <id>nextaudience-nexus</id>
+        <name>nexus.v402.rz.ham.next-audience.net-releases</name>
+        <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/releases/</url>
+    </repository>
+
+    <snapshotRepository>
+        <id>nextaudience-nexus</id>
+        <name>nexus.v402.rz.ham.next-audience.net-snapshots</name>
+        <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>

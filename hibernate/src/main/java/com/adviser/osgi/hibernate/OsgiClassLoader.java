@@ -26,6 +26,7 @@ package com.adviser.osgi.hibernate;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,10 +48,13 @@ import org.osgi.framework.Bundle;
  */
 public class OsgiClassLoader extends ClassLoader {
 
+    private final Object lock = new Object();
+
     // Leave these as Sets -- addClassLoader or addBundle may be called more
     // than once if a SF or EMF is closed and re-created.
     private Set<ClassLoader> classLoaders = new HashSet<ClassLoader>();
     private Set<Bundle> bundles = new HashSet<Bundle>();
+    private CountingMap<Bundle> bundlesMap = new CountingMap<Bundle>();
 
     private Map<String, Class<?>> classCache = new HashMap<String, Class<?>>();
     private Map<String, URL> resourceCache = new HashMap<String, URL>();
@@ -104,32 +108,33 @@ public class OsgiClassLoader extends ClassLoader {
      */
     @Override
     protected URL findResource(String name) {
-        if (resourceCache.containsKey(name)) {
-            return resourceCache.get(name);
-        }
+        synchronized (lock) {
+            if (resourceCache.containsKey(name)) {
+                return resourceCache.get(name);
+            }
 
-        for (Bundle bundle : bundles) {
-            try {
-                final URL resource = bundle.getResource(name);
-                if (resource != null) {
-                    resourceCache.put(name, resource);
-                    return resource;
+            for (Bundle bundle : bundles) {
+                try {
+                    final URL resource = bundle.getResource(name);
+                    if (resource != null) {
+                        resourceCache.put(name, resource);
+                        return resource;
+                    }
+                } catch (Exception ignore) {
                 }
-            } catch (Exception ignore) {
+            }
+
+            for (ClassLoader classLoader : classLoaders) {
+                try {
+                    final URL resource = classLoader.getResource(name);
+                    if (resource != null) {
+                        resourceCache.put(name, resource);
+                        return resource;
+                    }
+                } catch (Exception ignore) {
+                }
             }
         }
-
-        for (ClassLoader classLoader : classLoaders) {
-            try {
-                final URL resource = classLoader.getResource(name);
-                if (resource != null) {
-                    resourceCache.put(name, resource);
-                    return resource;
-                }
-            } catch (Exception ignore) {
-            }
-        }
-
         // TODO: Error?
         return null;
     }
@@ -146,27 +151,27 @@ public class OsgiClassLoader extends ClassLoader {
     @SuppressWarnings("unchecked")
     protected Enumeration<URL> findResources(String name) {
         final List<Enumeration<URL>> enumerations = new ArrayList<Enumeration<URL>>();
-
-        for (Bundle bundle : bundles) {
-            try {
-                final Enumeration<URL> resources = bundle.getResources(name);
-                if (resources != null) {
-                    enumerations.add(resources);
+        synchronized (lock) {
+            for (Bundle bundle : bundles) {
+                try {
+                    final Enumeration<URL> resources = bundle.getResources(name);
+                    if (resources != null) {
+                        enumerations.add(resources);
+                    }
+                } catch (Exception ignore) {
                 }
-            } catch (Exception ignore) {
+            }
+
+            for (ClassLoader classLoader : classLoaders) {
+                try {
+                    final Enumeration<URL> resources = classLoader.getResources(name);
+                    if (resources != null) {
+                        enumerations.add(resources);
+                    }
+                } catch (Exception ignore) {
+                }
             }
         }
-
-        for (ClassLoader classLoader : classLoaders) {
-            try {
-                final Enumeration<URL> resources = classLoader.getResources(name);
-                if (resources != null) {
-                    enumerations.add(resources);
-                }
-            } catch (Exception ignore) {
-            }
-        }
-
         final Enumeration<URL> aggEnumeration = new Enumeration<URL>() {
 
             @Override
@@ -200,7 +205,9 @@ public class OsgiClassLoader extends ClassLoader {
      *            The ClassLoader to add
      */
     public void addClassLoader(ClassLoader classLoader) {
-        classLoaders.add(classLoader);
+        synchronized (lock) {
+            classLoaders.add(classLoader);
+        }
     }
 
     /**
@@ -210,8 +217,10 @@ public class OsgiClassLoader extends ClassLoader {
      *            The ClassLoader to remove
      */
     public void removeClassLoader(ClassLoader classLoader) {
-        classLoaders.remove(classLoader);
-        clear();
+        synchronized (lock) {
+            classLoaders.remove(classLoader);
+            clear();
+        }
     }
 
     /**
@@ -221,7 +230,10 @@ public class OsgiClassLoader extends ClassLoader {
      *            The Bundle to add
      */
     public void addBundle(Bundle bundle) {
-        bundles.add(bundle);
+        synchronized (lock) {
+            bundles.add(bundle);
+            bundlesMap.inc(bundle);
+        }
     }
 
     /**
@@ -231,8 +243,13 @@ public class OsgiClassLoader extends ClassLoader {
      *            The bundle to remove
      */
     public void removeBundle(Bundle bundle) {
-        bundles.remove(bundle);
-        clear();
+        synchronized (lock) {
+            bundlesMap.dec(bundle);
+            if (bundlesMap.getCount(bundle) == 0) {
+                bundles.remove(bundle);
+                clear();
+            }
+        }
     }
 
     /**
@@ -243,4 +260,38 @@ public class OsgiClassLoader extends ClassLoader {
         resourceCache.clear();
     }
 
+
+    class CountingMap<T> {
+
+        private Map<T, Integer> map = new HashMap<T, Integer>();
+
+
+        public void inc(T key) {
+            if (key == null) return;
+            Integer count = map.get(key);
+            map.put(key, new Integer(count != null ? (count.intValue() + 1) : 1));
+        }
+
+        public void dec(T key) {
+            if (key == null) return;
+            Integer count = map.get(key);
+            if (count != null) {
+                if (count.intValue() == 1) {
+                    map.remove(key);
+                } else {
+                    map.put(key, new Integer(count.intValue() - 1));
+                }
+            }
+        }
+
+        public int getCount(T key) {
+            if (key != null) {
+                Integer count = map.get(key);
+                if (count != null) {
+                    return count.intValue();
+                }
+            }
+            return 0;
+        }
+    }
 }
