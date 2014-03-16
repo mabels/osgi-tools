@@ -3,23 +3,23 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.adviser.osgi</groupId>
   <artifactId>tools</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.5</version>
   <packaging>pom</packaging>
   <name>Osgi :: Tools</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <osgitools.datasource.base.version>1.0.1</osgitools.datasource.base.version>         
-    <osgitools.datasource.command.version>1.0.1</osgitools.datasource.command.version>
-    <osgitools.datasource.h2.version>1.0.1</osgitools.datasource.h2.version>
-    <osgitools.datasource.interfaces.version>1.0.1</osgitools.datasource.interfaces.version>
-    <osgitools.datasource.postgresql.version>1.0.2</osgitools.datasource.postgresql.version>
-    <osgitools.datasource.test.version>1.0.1</osgitools.datasource.test.version>
-    <osgitools.helper.version>1.0.1</osgitools.helper.version>
-    <osgitools.hibernate.version>1.0.2</osgitools.hibernate.version>
-    <osgitools.sreg.version>1.0.1</osgitools.sreg.version>
+    <osgitools.datasource.base.version>1.0.5</osgitools.datasource.base.version>         
+    <osgitools.datasource.command.version>1.0.5</osgitools.datasource.command.version>
+    <osgitools.datasource.h2.version>1.0.5</osgitools.datasource.h2.version>
+    <osgitools.datasource.interfaces.version>1.0.5</osgitools.datasource.interfaces.version>
+    <osgitools.datasource.postgresql.version>1.0.5</osgitools.datasource.postgresql.version>
+    <osgitools.datasource.test.version>1.0.5</osgitools.datasource.test.version>
+    <osgitools.helper.version>1.0.5</osgitools.helper.version>
+    <osgitools.hibernate.version>1.0.5</osgitools.hibernate.version>
+    <osgitools.sreg.version>1.0.5</osgitools.sreg.version>
 
-    <ipojo.version>1.11.1-SNAPSHOT</ipojo.version>
+    <ipojo.version>1.11.1</ipojo.version>
     <ipojo.plugin.version>1.11.1</ipojo.plugin.version>
     <osgi.version>4.3.1</osgi.version>
     <hibernate.version>4.3.4.Final</hibernate.version>
@@ -249,19 +249,17 @@
     </pluginManagement>
   </build>
 
-
-
   <distributionManagement>
     <repository>
-        <id>nextaudience-artifactory</id>
-        <name>repo.v402.rz.ham.next-audience.net-releases</name>
-        <url>http://repo.v402.rz.ham.next-audience.net/artifactory/libs-release-local</url>
+        <id>nextaudience-nexus</id>
+        <name>nexus.v402.rz.ham.next-audience.net-releases</name>
+        <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/releases/</url>
     </repository>
 
     <snapshotRepository>
-        <id>nextaudience-artifactory</id>
-        <name>repo.v402.rz.ham.next-audience.net-snapshots</name>
-        <url>http://repo.v402.rz.ham.next-audience.net/artifactory/libs-snapshot-local</url>
+        <id>nextaudience-nexus</id>
+        <name>nexus.v402.rz.ham.next-audience.net-snapshots</name>
+        <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 

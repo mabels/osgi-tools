@@ -4,10 +4,10 @@
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
   <artifactId>tools-datasource-postgresql</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.5</version>
   <packaging>bundle</packaging>
   <name>Osgi :: Tools :: datasource :: postgresql</name>
   <dependencies>
