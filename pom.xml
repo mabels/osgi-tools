@@ -22,7 +22,7 @@
     <ipojo.version>1.11.1-SNAPSHOT</ipojo.version>
     <ipojo.plugin.version>1.11.1</ipojo.plugin.version>
     <osgi.version>4.3.1</osgi.version>
-    <hibernate.version>4.3.1.Final</hibernate.version>
+    <hibernate.version>4.3.4.Final</hibernate.version>
     <ehcache-core.version>2.6.6</ehcache-core.version>
     <slf4j.version>1.7.5</slf4j.version>
     <junit.version>4.10</junit.version>
@@ -189,6 +189,22 @@
 				<target>1.7</target>
 			</configuration>
 		</plugin>
+   
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-source-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>attach-sources</id>
+      <goals>
+        <goal>jar</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+
+
+
   	</plugins>
     <pluginManagement>
       <plugins>
@@ -212,6 +228,19 @@
             <execution>
               <goals>
                 <goal>ipojo-bundle</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.2.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
               </goals>
             </execution>
           </executions>
