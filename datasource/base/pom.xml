@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.adviser.osgi</groupId>
-    <artifactId>tools</artifactId>
+    <artifactId>tools-datasource</artifactId>
     <version>1.0.5</version>
   </parent>
   <artifactId>tools-datasource-base</artifactId>
