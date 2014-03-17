@@ -4,9 +4,10 @@
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.5</version>
   </parent>
   <artifactId>tools-datasource-base</artifactId>
+  <version>1.0.5</version>
   <packaging>bundle</packaging>
   <name>Osgi :: Tools :: datasource :: base</name>
   <dependencies>
@@ -89,4 +90,17 @@
       </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+    <repository>
+        <id>nextaudience-nexus</id>
+        <name>nexus.v402.rz.ham.next-audience.net-releases</name>
+        <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/releases/</url>
+    </repository>
+
+    <snapshotRepository>
+        <id>nextaudience-nexus</id>
+        <name>nexus.v402.rz.ham.next-audience.net-snapshots</name>
+        <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
