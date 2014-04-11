@@ -33,10 +33,6 @@ public class IPOJOHelper {
      */
     private final BundleContext m_context;
     /**
-     * List of instances.
-     */
-    private final List<ComponentInstance> m_instances;
-    /**
      * The OSGi Helper.
      */
     private final OSGiHelper m_helper;
@@ -48,7 +44,6 @@ public class IPOJOHelper {
      */
     public IPOJOHelper(BundleContext context) {
         m_context = context;
-        m_instances = new ArrayList<ComponentInstance>();
         m_helper = new OSGiHelper(context);
     }
 
@@ -680,28 +675,7 @@ public class IPOJOHelper {
      * Disposes created instances.
      */
     public void dispose() {
-        for (ComponentInstance instance : m_instances) {
-            instance.dispose();
-        }
         m_helper.dispose();
-        m_instances.clear();
-    }
-
-    /**
-     * Gets a created instance from the instance name.
-     *
-     * @param name the instance name.
-     * @return the created {@link org.apache.felix.ipojo.ComponentInstance} or <code>null</code>
-     *         if the instance was not created during the session.
-     */
-    public ComponentInstance getInstanceByName(String name) {
-        for (ComponentInstance instance : m_instances) {
-            if (instance.getInstanceName()
-                    .equals(name)) {
-                return instance;
-            }
-        }
-        return null;
     }
 
     /**
@@ -717,7 +691,6 @@ public class IPOJOHelper {
                                                      String instanceName) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, instanceName);
-        m_instances.add(ci);
         return ci;
     }
 
@@ -735,7 +708,6 @@ public class IPOJOHelper {
                                                      Dictionary<String, Object> configuration) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, configuration);
-        m_instances.add(ci);
         return ci;
     }
 
@@ -753,7 +725,6 @@ public class IPOJOHelper {
                                                      Properties configuration) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, configuration);
-        m_instances.add(ci);
         return ci;
     }
 
@@ -768,7 +739,6 @@ public class IPOJOHelper {
     public ComponentInstance createComponentInstance(String factoryName) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, (Dictionary<String, Object>) null);
-        m_instances.add(ci);
         return ci;
     }
 
@@ -786,7 +756,6 @@ public class IPOJOHelper {
                                                      String instanceName, Dictionary<String, Object> configuration) {
         ComponentInstance ci = createComponentInstance(m_context.getBundle(),
                 factoryName, instanceName, configuration);
-        m_instances.add(ci);
         return ci;
     }
 

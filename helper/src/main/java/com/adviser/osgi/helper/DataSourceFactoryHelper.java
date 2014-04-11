@@ -42,6 +42,7 @@ public class DataSourceFactoryHelper {
         if (dataSourceFactory != null && pid != null) {
             dataSourceFactory.deleteDataSource(pid);
         }
+        osgiHelper.dispose();
     }
 
 }

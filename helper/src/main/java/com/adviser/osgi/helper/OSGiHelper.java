@@ -28,7 +28,6 @@ public class OSGiHelper {
     /**
      * List of get references.
      */
-    private List<ServiceReference> m_references = new ArrayList<ServiceReference>();
 
     public OSGiHelper(BundleContext context) {
         this.context = context;
@@ -161,11 +160,6 @@ public class OSGiHelper {
     }
 
     public void dispose() {
-        // Unget services
-        for (ServiceReference ref : m_references) {
-            context.ungetService(ref);
-        }
-        m_references.clear();
     }
 
     /**
@@ -228,7 +222,6 @@ public class OSGiHelper {
     public Object getServiceObject(String itf, String filter) {
         ServiceReference ref = getServiceReference(itf, filter);
         if (ref != null) {
-            m_references.add(ref);
             return context.getService(ref);
         } else {
             return null;
@@ -247,7 +240,6 @@ public class OSGiHelper {
     public <T> T getServiceObject(Class<T> clazz, String filter) {
         ServiceReference ref = getServiceReference(clazz.getName(), filter);
         if (ref != null) {
-            m_references.add(ref);
             return clazz.cast(context.getService(ref));
         } else {
             return null;
@@ -273,7 +265,6 @@ public class OSGiHelper {
      */
     public Object getServiceObject(ServiceReference ref) {
         if (ref != null) {
-            m_references.add(ref);
             return context.getService(ref);
         } else {
             return null;
@@ -294,7 +285,6 @@ public class OSGiHelper {
         if (refs != null) {
             Object[] list = new Object[refs.length];
             for (int i = 0; i < refs.length; i++) {
-                m_references.add(refs[i]);
                 list[i] = context.getService(refs[i]);
             }
             return list;
