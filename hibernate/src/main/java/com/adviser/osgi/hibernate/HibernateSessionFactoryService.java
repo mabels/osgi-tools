@@ -46,10 +46,12 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
     private final OsgiClassLoader osgiClassLoader;
     private final OsgiJtaPlatform osgiJtaPlatform;
     private OsgiServiceUtil osgiServiceUtil;
+    private BundleContext bundleContext;
 
 
     public HibernateSessionFactoryService(final BundleContext context) throws Exception {
         super(null, null, null);
+        this.bundleContext = context;
         // build a ClassLoader that uses all the necessary OSGi bundles, and place it into
         // a well-known location so internals can access it
         this.osgiClassLoader = new OsgiClassLoader();
@@ -90,12 +92,7 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
         configuration.configure(hibernateCfg);
 
         final BootstrapServiceRegistryBuilder builder = new BootstrapServiceRegistryBuilder();
-        builder.with(this.osgiClassLoader);
-        // Are the following 2 really needed?
-        builder.with(org.hibernate.cache.ehcache.EhCacheRegionFactory.class.getClassLoader());
-        builder.with(net.sf.ehcache.statistics.sampled.SampledCacheStatistics.class.getClassLoader());
-        builder.with(javassist.util.proxy.ProxyObject.class.getClassLoader());
-        builder.with(org.hibernate.proxy.HibernateProxy.class.getClassLoader());
+        registerClasses(builder);
 
         final Integrator[] integrators = this.osgiServiceUtil.getServiceImpls(Integrator.class);
         for (final Integrator integrator : integrators) {
@@ -128,6 +125,35 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
             }
         }
         return configuration.buildSessionFactory(serviceRegistry);
+    }
+
+    private void registerClasses(final BootstrapServiceRegistryBuilder builder) {
+        builder.with(this.osgiClassLoader);
+        // Are the following 2 really needed?
+        builder.with(org.hibernate.cache.ehcache.EhCacheRegionFactory.class.getClassLoader());
+        builder.with(net.sf.ehcache.statistics.sampled.SampledCacheStatistics.class.getClassLoader());
+        builder.with(javassist.util.proxy.ProxyObject.class.getClassLoader());
+        builder.with(org.hibernate.proxy.HibernateProxy.class.getClassLoader());
+        addClassesDynamically(builder);
+    }
+
+    private void addClassesDynamically(final BootstrapServiceRegistryBuilder builder) {
+        for(Bundle bundle : this.bundleContext.getBundles()) {
+            String classList = bundle.getHeaders().get("HibernateSessionFactoryService");
+            if(classList != null && !classList.trim().isEmpty()) {
+                LOG.info("Adding classes of bundle [{}] / {}", bundle.getSymbolicName(), bundle.getBundleId());
+                String[] classes = classList.replaceAll("\\s", "").split(",");
+                for(String className : classes) {
+                    try {
+                        LOG.info("Adding class [{}]", className);
+                        Class c = bundle.loadClass(className);
+                        builder.with(c.getClassLoader());
+                    } catch (ClassNotFoundException e) {
+                        LOG.warn("Could not find or load class {}", className);
+                    }
+                }
+            }
+        }
     }
 
     @Override
