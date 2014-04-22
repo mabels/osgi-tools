@@ -1,6 +1,7 @@
 package com.adviser.osgi.hibernate;
 
-import java.util.Map;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -18,12 +19,9 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.engine.jdbc.dialect.spi.DialectFactory;
-import org.hibernate.engine.spi.NamedSQLQueryDefinition;
 import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.internal.util.ClassLoaderHelper;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.hibernate.metamodel.Metadata;
-import org.hibernate.metamodel.MetadataSources;
 import org.hibernate.metamodel.spi.TypeContributor;
 import org.hibernate.osgi.OsgiJtaPlatform;
 import org.hibernate.osgi.OsgiServiceUtil;
@@ -77,18 +75,18 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
     @Override
     public SessionFactory create(final Bundle requestingBundle, final String hibernateCfg,
             final ConnectionProvider connectionProvider, final DialectFactory dialectFactory,
-            final Map<String, NamedSQLQueryDefinition> namedSQLQueries, final Properties configurationProperties) {
-
+            final Properties configurationProperties) {
         this.osgiClassLoader.addBundle(requestingBundle);
 
         final Configuration configuration = new Configuration();
         configuration.getProperties().put(AvailableSettings.JTA_PLATFORM, this.osgiJtaPlatform);
         // allow to additional custom properties for Session creation
         if (configurationProperties != null) {
-            for (Entry<Object, Object> e : configurationProperties.entrySet()){
+            for (Entry<Object, Object> e : configurationProperties.entrySet()) {
                 configuration.getProperties().put(e.getKey(), e.getValue());
             }
         }
+
         configuration.configure(hibernateCfg);
 
         final BootstrapServiceRegistryBuilder builder = new BootstrapServiceRegistryBuilder();
@@ -99,8 +97,8 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
             builder.with(integrator);
         }
 
-        final StrategyRegistrationProvider[] strategyRegistrationProviders = this.osgiServiceUtil.getServiceImpls(
-                StrategyRegistrationProvider.class);
+        final StrategyRegistrationProvider[] strategyRegistrationProviders = this.osgiServiceUtil
+                .getServiceImpls(StrategyRegistrationProvider.class);
         for (final StrategyRegistrationProvider strategyRegistrationProvider : strategyRegistrationProviders) {
             builder.withStrategySelectors(strategyRegistrationProvider);
         }
@@ -115,16 +113,14 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
         srb.addService(DialectFactory.class, dialectFactory);
         final ServiceRegistry serviceRegistry = srb.applySettings(configuration.getProperties()).build();
 
-        if (namedSQLQueries != null) {
-            // get the namedQueries from Hibernate and store them in the provided map
-            final MetadataSources metadataSources = new MetadataSources(serviceRegistry);
-            metadataSources.addResource(hibernateCfg);
-            final Metadata metadata = metadataSources.buildMetadata();
-            for (final NamedSQLQueryDefinition definition : metadata.getNamedNativeQueryDefinitions()) {
-                namedSQLQueries.put(definition.getName(), definition);
-            }
+        Thread t = Thread.currentThread();
+        ClassLoader old = t.getContextClassLoader();
+        try {
+            t.setContextClassLoader(this.osgiClassLoader);
+            return configuration.buildSessionFactory(serviceRegistry);
+        } finally {
+            t.setContextClassLoader(old);
         }
-        return configuration.buildSessionFactory(serviceRegistry);
     }
 
     private void registerClasses(final BootstrapServiceRegistryBuilder builder) {
@@ -138,18 +134,26 @@ public class HibernateSessionFactoryService extends OsgiSessionFactoryService im
     }
 
     private void addClassesDynamically(final BootstrapServiceRegistryBuilder builder) {
-        for(Bundle bundle : this.bundleContext.getBundles()) {
+        for (Bundle bundle : this.bundleContext.getBundles()) {
             String classList = bundle.getHeaders().get("HibernateSessionFactoryService");
-            if(classList != null && !classList.trim().isEmpty()) {
+            if (classList != null && !classList.trim().isEmpty()) {
                 LOG.info("Adding classes of bundle [{}] / {}", bundle.getSymbolicName(), bundle.getBundleId());
                 String[] classes = classList.replaceAll("\\s", "").split(",");
-                for(String className : classes) {
+                for (String className : classes) {
                     try {
                         LOG.info("Adding class [{}]", className);
                         Class c = bundle.loadClass(className);
                         builder.with(c.getClassLoader());
                     } catch (ClassNotFoundException e) {
                         LOG.warn("Could not find or load class {}", className);
+                        String path = "/" + className.replace(".", "/");
+                        int index = path.lastIndexOf("/");
+                        path = path.substring(0, index);
+                        Enumeration<URL> urls = bundle.findEntries(path, "*", true);
+                        while (urls.hasMoreElements()) {
+                            LOG.info("Found {}", urls.nextElement());
+                        }
+
                     }
                 }
             }
