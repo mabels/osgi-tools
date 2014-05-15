@@ -8,10 +8,11 @@
   <packaging>pom</packaging>
 
   <name>Osgi :: Tools</name>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <osgitools.datasource.base.version>1.0.5</osgitools.datasource.base.version>         
+    <osgitools.datasource.base.version>1.0.6</osgitools.datasource.base.version>
     <osgitools.datasource.command.version>1.0.5</osgitools.datasource.command.version>
     <osgitools.datasource.h2.version>1.0.5</osgitools.datasource.h2.version>
     <osgitools.datasource.interfaces.version>1.0.5</osgitools.datasource.interfaces.version>
@@ -29,12 +30,14 @@
     <slf4j.version>1.7.5</slf4j.version>
     <junit.version>4.10</junit.version>
   </properties>
+
   <modules>
     <module>datasource</module>
     <module>sreg</module>
     <module>helper</module>
     <module>hibernate</module>
   </modules>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -180,6 +183,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <build>
   	<plugins>
 		<plugin>
@@ -191,23 +195,21 @@
 				<target>1.7</target>
 			</configuration>
 		</plugin>
-   
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-source-plugin</artifactId>
-  <executions>
-    <execution>
-      <id>attach-sources</id>
-      <goals>
-        <goal>jar</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
 
-
-
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
   	</plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>

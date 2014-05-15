@@ -6,17 +6,23 @@
     in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
     ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under
     the License. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.lr.tutorial.karaf.db</groupId>
-  <artifactId>tools-datasource-command</artifactId>
-  <name>Osgi :: Tools :: datasource :: command</name>
-  <packaging>bundle</packaging>
+
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
     <version>1.0.5</version>
   </parent>
+  <groupId>net.lr.tutorial.karaf.db</groupId>
+  <artifactId>tools-datasource-command</artifactId>
+  <packaging>bundle</packaging>
+
+  <name>Osgi :: Tools :: Datasource :: Command</name>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.karaf.shell</groupId>
@@ -38,13 +44,13 @@
       <version>1.0.1</version>
     </dependency>
   </dependencies>
+
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.6</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>
