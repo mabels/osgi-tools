@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
@@ -8,7 +13,9 @@
   </parent>
   <artifactId>tools-datasource-test</artifactId>
   <packaging>bundle</packaging>
-  <name>Osgi :: Tools :: datasource :: test</name>
+
+  <name>Osgi :: Tools :: Datasource :: Test</name>
+
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -23,6 +30,7 @@
       <artifactId>org.apache.felix.ipojo.annotations</artifactId>
     </dependency>
   </dependencies>
+
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>

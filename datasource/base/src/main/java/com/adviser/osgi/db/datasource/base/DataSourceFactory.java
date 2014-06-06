@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool.KeyedObjectPoolFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
@@ -74,12 +74,16 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
                     props.get(Constants.SERVICE_PID), driverName);
             return null;
         }
+
         LOGGER.info("DriverAndServiceReference:{}=>{}", driverName, dasr);
+
         for (final String key : dasr.serviceReference.getPropertyKeys()) {
             LOGGER.info("ServiceReference:driver.{}=>{}", key, dasr.serviceReference.getProperty(key));
             props.put("driver." + key, dasr.serviceReference.getProperty(key).toString());
         }
+
         LOGGER.info("DataSourceFactory:createOrUpdateDataSource:{}:{}", pid, driverName);
+
         create(dasr.driverFactory.get(), props, dataSourceParams);
 
         props.put("osgi.jndi.service.name", getString("name", props));
@@ -93,8 +97,8 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
             LOGGER.info("{}={}", key, props.get(key));
         }
         soProps.put("dataSourceParams", dataSourceParams);
-        dataSourceParams.instanceHolder = this.ipojoInstanceHelper.create(DataSource.class, IPojoPoolingDataSource.class.getName(), pid,
-                soProps);
+        dataSourceParams.instanceHolder = this.ipojoInstanceHelper.create(DataSource.class, IPojoPoolingDataSource.class.getName(),
+                pid, soProps);
 
         return pid;
     }
@@ -122,11 +126,14 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
     public String createDatabaseFromName(final Dictionary<String, String> props) throws SQLException {
         final DataSource systemds = getSystemDS(props);
         if (systemds == null) {
-            LOGGER.error("Could not drop database {}. No system datasource found to drop database for PID.", props.get(PROP_CREATE_DATABASE_NAME));
+            LOGGER.error("Could not drop database {}. No system datasource found to drop database for PID.",
+                    props.get(PROP_CREATE_DATABASE_NAME));
             return null;
         }
         runStmt(systemds, "CREATE DATABASE " + props.get(PROP_CREATE_DATABASE_NAME), props.get(PROP_CREATE_DATABASE_NAME));
+
         LOGGER.info("Successfully created database for PID {}.", props.get(PROP_CREATE_DATABASE_NAME));
+
         return createDataSource(props);
     }
 
@@ -158,6 +165,7 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
             return;
         }
         runStmt(systemds, "DROP DATABASE " + props.get(PROP_CREATE_DATABASE_NAME), props.get(PROP_CREATE_DATABASE_NAME));
+
         LOGGER.info("Successfully dropped database for PID {}.", pid);
     }
 
@@ -166,7 +174,8 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
     public boolean existsDatabase(final Dictionary<String, String> props) throws SQLException {
         final DataSource systemds = getSystemDS(props);
         if (systemds == null) {
-            LOGGER.error("Could not check database existence for {}. No system datasource found to drop database for PID.", props.get(PROP_CREATE_DATABASE_NAME));
+            LOGGER.error("Could not check database existence for {}. No system datasource found to drop database for PID.",
+                    props.get(PROP_CREATE_DATABASE_NAME));
             return false;
         }
         String sql = "select * from pg_database where datname = '" + props.get(PROP_CREATE_DATABASE_NAME) + "'";
@@ -196,7 +205,8 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
         final String databaseName = props.get(PROP_CREATE_DATABASE_NAME);
         final String systemDataSourceName = props.get(PROP_CREATE_DATABASE_DATASOURCE_NAME);
         if (databaseName == null || databaseName.isEmpty() || systemDataSourceName == null || systemDataSourceName.isEmpty()) {
-            LOGGER.error("Properties must contain key:{} and key:{}", PROP_CREATE_DATABASE_NAME, PROP_CREATE_DATABASE_DATASOURCE_NAME);
+            LOGGER.error("Properties must contain key:{} and key:{}", PROP_CREATE_DATABASE_NAME,
+                    PROP_CREATE_DATABASE_DATASOURCE_NAME);
             return null;
         }
         final DataSource systemds = findDataSourceByName(systemDataSourceName);
@@ -218,7 +228,7 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
             connection.close();
         }
     }
-    
+
     public DataSourceFactory(final BundleContext context) {
         this.ipojoInstanceHelper = new IPOJOInstanceHelper(context);
     }
@@ -235,15 +245,18 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
 
     @Bind(optional = true, aggregate = true)
     public void addDriver(final DriverFactory driver, final ServiceReference<DriverFactory> sr) {
-        final String driverSignature = String.format("%s-%s-%s", driver.getClass().getCanonicalName(), sr.getProperty("name"),
+        String driverClassName = driver.getClass().getCanonicalName();
+        final String driverSignature = String.format("%s-%s-%s", driverClassName, sr.getProperty("name"),
                 sr.getProperty("fullName"));
-        LOGGER.info("DataSourceFactory:addDriver:{}", driver.getClass().getCanonicalName());
+
+        LOGGER.info("DataSourceFactory:addDriver:{}", driverClassName);
+
         this.drivers.add(new DriverAndServiceReference(driver, sr));
         // Replay Connection
         for (final Map.Entry<String, DataSourceParams> entry : pid2dataSourceParams.entrySet()) {
             if (isDriver(entry.getValue().props.get("driver"), sr)) {
                 if (entry.getValue().serviceRegistration != null) {
-                    LOGGER.error("addDriver has an registered DataSources:{}", driverSignature);
+                    LOGGER.error("DataSource {} already registered", driverSignature);
                     continue;
                 }
                 createDataSource(entry.getValue().props);
@@ -276,9 +289,11 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
 
     private DriverAndServiceReference findByName(final String name) {
         for (final DriverAndServiceReference driver : this.drivers) {
-            LOGGER.info("findByName:{}=={}||{}", name, driver.serviceReference.getProperty("name"),
-                    driver.serviceReference.getProperty("fullName"));
-            if (isDriver(name, driver.serviceReference)) {
+            ServiceReference<DriverFactory> serviceRef = driver.serviceReference;
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("findByName:{}=={}||{}", name, serviceRef.getProperty("name"), serviceRef.getProperty("fullName"));
+            }
+            if (isDriver(name, serviceRef)) {
                 return driver;
             }
         }
@@ -290,10 +305,13 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
         try {
             final String name = sr.getProperty("name").toString();
             final String fullName = sr.getProperty("fullName").toString();
+
             LOGGER.info("DataSourceFactory:delDriver:{}", driver.getClass().getCanonicalName());
+
             this.drivers.remove(findByName(name));
             this.drivers.remove(findByName(fullName));
             final List<DataSourceParams> toRenew = new LinkedList<DataSourceParams>();
+
             for (final Map.Entry<String, DataSourceParams> entry : pid2dataSourceParams.entrySet()) {
                 if (isDriver(sr, entry.getValue().serviceRegistration.getReference())) {
                     toRenew.add(entry.getValue());
@@ -314,14 +332,48 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
         return (value instanceof String) ? (String) value : null;
     }
 
-    public static DataSourceParams create(final Driver driver, final Dictionary<String, String> prop, final DataSourceParams dsp) {
+    protected static int getInt(String key, Dictionary<?, ?> dict, int def) {
+        Object val = dict.get(key);
+        if (val == null) {
+            return def;
+        }
+        try {
+            return Integer.parseInt(val.toString());
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Could not parse {} as integer. Returning passed default {}.", val, def);
+            return def;
+        }
+    }
+
+    protected static long getLong(String key, Dictionary<?, ?> dict, long def) {
+        Object val = dict.get(key);
+        if (val == null) {
+            return def;
+        }
+        try {
+            return Long.parseLong(val.toString());
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Could not parse {} as long. Returning passed default {}.", val, def);
+            return def;
+        }
+    }
+
+    protected static boolean getBool(String key, Dictionary<?, ?> dict, boolean def) {
+        Object val = dict.get(key);
+        if (val == null) {
+            return def;
+        }
+        return Boolean.parseBoolean(val.toString());
+    }
+
+    private static DataSourceParams create(final Driver driver, final Dictionary<String, String> dict, final DataSourceParams dsp) {
         final Properties driverProp = new Properties();
-        final Enumeration<String> keys = prop.keys();
+        final Enumeration<String> keys = dict.keys();
         while (keys.hasMoreElements()) {
             final String key = keys.nextElement();
-            driverProp.setProperty(key, prop.get(key));
+            driverProp.setProperty(key, dict.get(key));
         }
-        final String uri = getString("url", prop);
+        final String uri = getString("url", dict);
         final int jdbcIdx = uri.indexOf(':');
         if (jdbcIdx <= 0) {
             LOGGER.error("url not parsable:{}", uri);
@@ -344,24 +396,45 @@ public class DataSourceFactory implements com.adviser.osgi.db.datasource.DataSou
         };
 
         final GenericObjectPool connectionPool = new GenericObjectPool();
-        connectionPool.setMaxActive(30);
+        final GenericObjectPool.Config poolConfig = createPoolConfig(dict);
+        connectionPool.setConfig(poolConfig);
 
-        final GenericKeyedObjectPool.Config stmtConfig = new GenericKeyedObjectPool.Config();
-        // stmtConfig.lifo = true;
-        stmtConfig.maxActive = 1024;
-        stmtConfig.maxIdle = 64;
-        stmtConfig.maxTotal = -1;
-        stmtConfig.whenExhaustedAction = GenericObjectPool.WHEN_EXHAUSTED_FAIL;
-        stmtConfig.timeBetweenEvictionRunsMillis = 500;
+        final KeyedObjectPoolFactory stmtPoolFactory = null; // new GenericKeyedObjectPoolFactory(null, stmtConfig)
+        final String validationQuery = getString("validationQuery", dict); // getString("driver.sql.validation.query", dict)
+        final boolean defaultReadOnly = false;
+        final boolean defaultAutoCommit = false;
 
-        // final KeyedObjectPoolFactory stmtPoolFactory = new GenericKeyedObjectPoolFactory(null, stmtConfig);
-
-        dsp.poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, // getString("driver.sql.validation.query",
-                // prop),
-                false, false);
+        dsp.poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, connectionPool, stmtPoolFactory,
+                validationQuery, defaultReadOnly, defaultAutoCommit);
         dsp.poolingDataSource = new PoolingDataSource(dsp.poolableConnectionFactory.getPool());
 
         return dsp;
+    }
+
+    private static GenericObjectPool.Config createPoolConfig(final Dictionary<String, String> dict) {
+        final GenericObjectPool.Config conf = new GenericObjectPool.Config();
+        // stmtConfig.lifo = true;
+
+        conf.maxIdle = getInt("maxIdle", dict, GenericObjectPool.DEFAULT_MAX_IDLE);
+        conf.maxActive = getInt("maxActive", dict, 30);
+        conf.minIdle = getInt("minIdle", dict, GenericObjectPool.DEFAULT_MIN_IDLE);
+        conf.maxWait = getLong("maxWait", dict, GenericObjectPool.DEFAULT_MAX_WAIT);
+
+        // public byte whenExhaustedAction = GenericObjectPool.DEFAULT_WHEN_EXHAUSTED_ACTION;
+        conf.whenExhaustedAction = (byte) getInt("whenExhaustedAction", dict, GenericObjectPool.WHEN_EXHAUSTED_FAIL);
+
+        conf.testOnBorrow = getBool("testOnBorrow", dict, GenericObjectPool.DEFAULT_TEST_ON_BORROW);
+        conf.testOnReturn = getBool("testOnReturn", dict, GenericObjectPool.DEFAULT_TEST_ON_RETURN);
+        conf.testWhileIdle = getBool("testWhileIdle", dict, GenericObjectPool.DEFAULT_TEST_WHILE_IDLE);
+
+        // public long timeBetweenEvictionRunsMillis = GenericObjectPool.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+        conf.timeBetweenEvictionRunsMillis = getLong("timeBetweenEvictionRunsMillis", dict, 500L);
+
+        conf.numTestsPerEvictionRun = getInt("numTestsPerEvictionRun", dict, GenericObjectPool.DEFAULT_NUM_TESTS_PER_EVICTION_RUN);
+        conf.minEvictableIdleTimeMillis = getLong("minEvictableIdleTimeMillis", dict,
+                GenericObjectPool.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+
+        return conf;
     }
 
 }

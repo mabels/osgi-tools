@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>com.adviser.osgi</groupId>
     <artifactId>tools-datasource</artifactId>
     <version>1.0.5</version>
   </parent>
   <artifactId>tools-datasource-base</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <packaging>bundle</packaging>
-  <name>Osgi :: Tools :: datasource :: base</name>
+
+  <name>Osgi :: Tools :: Datasource :: Base</name>
+
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -31,7 +35,7 @@
       <dependency>
         <groupId>org.apache.felix</groupId>
         <artifactId>org.apache.felix.ipojo</artifactId>
-      </dependency>    
+      </dependency>
     -->
     <dependency>
       <groupId>org.apache.felix</groupId>
@@ -90,13 +94,13 @@
       </plugin>
     </plugins>
   </build>
+
   <distributionManagement>
     <repository>
         <id>nextaudience-nexus</id>
         <name>nexus.v402.rz.ham.next-audience.net-releases</name>
         <url>http://nexus.v402.rz.ham.next-audience.net/nexus/content/repositories/releases/</url>
     </repository>
-
     <snapshotRepository>
         <id>nextaudience-nexus</id>
         <name>nexus.v402.rz.ham.next-audience.net-snapshots</name>
